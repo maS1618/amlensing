@@ -8,6 +8,7 @@ from utils import DEG
 import plot_functions  as pf
 import random
 import os 
+
 os.chdir(os.path.dirname(__file__))
 folder = '../Images/Timescale'
 os.makedirs(folder+'/', exist_ok=True)

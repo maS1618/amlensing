@@ -24,8 +24,7 @@ def download_rawcands(folder=FOLDER ,
     rawcands.write(folder + file, format = fmt,overwrite = True)
     return rawcands
 
-
-
+    
 def download_HPMS(rawcands, folder=FOLDER, file=setup.HPMS_eDR3_file):
     print('download HPMS')
     upload_resource  = folder+'.TMP_TabForQuerry.vot'
@@ -135,7 +134,6 @@ def download_random_sample_edr3(n = 100000, folder=FOLDER,
     if '.vot' in file: fmt = 'votable'
     random_sample.remove_column('designation')
     random_sample.write(folder + file, format = fmt, overwrite = True)
-
 
 def input():
     n = 100000

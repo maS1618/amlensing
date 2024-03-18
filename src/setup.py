@@ -12,7 +12,7 @@ warnings.simplefilter("ignore")
 n_core = 4
 prefix = ''
 do_filter = 1
-# Files has to be located in Data or given as relative path from current working directory.
+# Files have to be located in Data or given as relative path from current working directory.
 # Raw Pairs File 
 raw_cands_table = 'rawcands.fits' 
 
@@ -37,6 +37,7 @@ DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits'
 #gaiaedr3 random sample, used for plots only 
 random_sample_file = 'random_sample.fits'
 dr2_random_file = 'dr2_random.fits'
+dr3_random_file = 'dr3_random.fits'
 
 
 #Blacklist

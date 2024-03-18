@@ -1,0 +1,6 @@
+numpy >=1.19.5
+matplotlib >=3.3.3
+joblib >=1.0.0
+astropy >=4.2
+astroquery >= 0.4.1
+pyvo >= 1.1
