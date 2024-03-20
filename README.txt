@@ -19,9 +19,6 @@ python amlensing download_data [-random_sample] [-n] [- comands]
 Data are downloaded to the ./Data directory, following the file names defined in setup.py.
 
 
-
-Using 
-
 python amlensing [- comands]
 
 comands: (defaultvalues are stored in setup.py)
@@ -43,7 +40,7 @@ Default parameters are defined in the setup.py script.
 
 
 Requirements
-Developed & teste with python 3.7.9 & 3.8.7
+Developed & tested with python 3.7.9 & 3.8.7
 numpy >=1.19.5
 matplotlib >=3.3.3
 joblib >=1.0.0

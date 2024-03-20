@@ -35,6 +35,7 @@ def broadcast():
 	GB.broadcast()
 	GH.broadcast()
 	GP.broadcast()
+
 def fill_value(tab):
 	# replace None values with default value
 	# see setup for values
@@ -144,14 +145,14 @@ def check_bgs():
 			good_raw_cands_HPMS['ob_source_id'], good_BGS_source_ID)]
 
 		# include DR2- DR3 propermotion
-		DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
+		'''DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
 			for i in good_raw_cands_BGS['ob_source_id']])
 		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
 			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
 			+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
 		good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
 			MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
-			+ 'Displacemnet in DEC between DR2 and DR3.')
+			+ 'Displacemnet in DEC between DR2 and DR3.')'''
 
 	elif os.path.isfile(bgs_file): 
 		# load pre determined whitelist
@@ -165,7 +166,7 @@ def check_bgs():
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
 			good_raw_cands_HPMS['obj_source_id'], good_bgs['source_id'])]
-	else: 
+	'''else: 
 		#do not performe BGS filtering 
 		good_raw_cands_BGS = good_raw_cands_HPMS
 		good_BGS_source_ID, _ , pmDR2 = GB.main()
@@ -180,6 +181,7 @@ def check_bgs():
 			MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
 			+ 'Displacemnet in DEC between DR2 and DR3.')
 		print('No bgs file found')
+		'''
 def check_pairs():
 	# filter pairs based on the comparison between lens and source data
 	# i.e exclude binary stars 

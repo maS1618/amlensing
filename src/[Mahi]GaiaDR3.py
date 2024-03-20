@@ -1,4 +1,4 @@
-"""import astropy.units as u
+import astropy.units as u
 from astropy.coordinates.sky_coordinate import SkyCoord
 from astropy.units import Quantity
 from astroquery.gaia import Gaia
@@ -23,7 +23,7 @@ WHERE CONTAINS(POINT(gaiadr1.gaia_source.ra,gaiadr1.gaia_source.dec),CIRCLE(56.7
 print (job)
 
 r = job.get_results()
-print (r['source_id'])"""
+print (r['source_id'])
 
 ############################################################################################################
 

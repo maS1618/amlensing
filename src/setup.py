@@ -25,20 +25,21 @@ raw_cands_table = 'rawcands.fits'
 hpms_file = 'good_HPMS.py'
 bgs_file = 'good_BGS.py'
 
-# Files for determine Good HPMS and BGS
-HPMS_eDR3_file = 'gaia_edr3_hpms.fits' #all potential HPMS
-GCNS_cat_file = 'GCNS_cat.fits' #Gaia catalogue of nearby stars
-GCNS_reject_file= 'GCNS_reject.fits' #Gaia catalogue of nearby stars, rejected sources
-HPMS_spur_file = 'HPMS_spur.fits' #fidility values from J. Rybizki et al. 2021 (optional)
+# Files to determine Good HPMS and BGS
+HPMS_DR3_file = 'gaia_dr3_hpms.fits' #all potential HPMS
+#GCNS_cat_file = 'GCNS_cat.fits' #Gaia catalogue of nearby stars
+#GCNS_reject_file= 'GCNS_reject.fits' #Gaia catalogue of nearby stars, 
+									 #rejected sources
+#HPMS_spur_file = 'HPMS_spur.fits' #fidility values from J. Rybizki
+								  #et al. 2021 (optional)
 
-BGS_eDR3_file = 'gaia_edr3_bgs.fits' #all potential BGS
+BGS_DR3_file = 'gaia_dr3_bgs.fits' #all potential BGS
 #gaiaedr3.dr2_neighbourhood for all BGS
-DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits' 
+#DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits' 
 #gaiaedr3 random sample, used for plots only 
 random_sample_file = 'random_sample.fits'
-dr2_random_file = 'dr2_random.fits'
+#dr2_random_file = 'dr2_random.fits'
 dr3_random_file = 'dr3_random.fits'
-
 
 #Blacklist
 Blacklist_file = 'Blacklist.csv'
@@ -58,7 +59,7 @@ form_out = ['.fits','fits'] # save data as fits table
 # use Percentile to determine Errors 
 error_percentile = True
 
-# Gaia paralax zero point
+# Gaia parallax zero point
 zeropoint = 0	 # Used in Filters, 
 
 # Default values for NONE in the raw pairs
@@ -80,7 +81,7 @@ Gaia_epoch = 2016.
 # limits for criteria on High Proper Motion Stars 
 # used in good_HPMS.py
 HPMS_limit = {
-	'ruwe': 2.0,
+	'ruwe': 2,
 	'px':5,
 	'mag': 21,
 	'n_obs_sig_g_flux': 3e5,
@@ -88,18 +89,19 @@ HPMS_limit = {
 # limits for criteria on BackGround Stars 
 # used in good_BGS.py
 BGS_limit = {
-	'ruwe':2.0,
+	'ruwe':2,
 	'px': -3,
 	'pm': 80,
 	'mag': 21.5,
 	'pos_err':10}
-# limits for DR2 Match
+
+'''# limits for DR2 Match
 # used in good_BGS.py
-DR2_limit = {
+'''DR2_limit = {
 	'dist': 400, 
 	'pm_bad': 1000,
-	'mag': 0.3}
-
+	'mag': 0.3}'''
+'''
 # limits for criteria on HPMS-BGS Pairs 
 # used in good_Pairs.py
 Pair_limit = {
@@ -108,7 +110,5 @@ Pair_limit = {
 	'pm_sim_2': 0.7,
 	'pm_tot': 80}
 #------------------------------------------------------------------------------
-
-
 
 
