@@ -9,21 +9,18 @@ import time
 #sub packages
 import plot_functions as pf
 
-from setup import Folder, BGS_eDR3_file, DR2_BGS_file, BGS_limit,\
-	DR2_limit, zeropoint,save_table_process,make_plots, form_out, prefix,\
-	random_sample_file, dr2_random_file
+from setup import Folder, BGS_DR3_file, BGS_limit,\
+	  zeropoint,save_table_process,make_plots, form_out, prefix,\
+	random_sample_file, dr3_random_file
 from utils import cosdeg
 
-
-
-
 def broadcast():
-	global Folder, BGS_eDR3_file, DR2_BGS_file, BGS_limit,\
-		DR2_limit, zeropoint,save_table_process,make_plots, form_out, prefix,\
-		random_sample_file, dr2_random_file
+	global Folder, BGS_DR3_file, BGS_limit,\
+		 zeropoint,save_table_process,make_plots, form_out, prefix,\
+		random_sample_file, dr3_random_file
 	from setup import Folder, BGS_eDR3_file, DR2_BGS_file, BGS_limit,\
-		DR2_limit, zeropoint,save_table_process,make_plots, form_out, prefix,\
-		random_sample_file, dr2_random_file
+		 zeropoint,save_table_process,make_plots, form_out, prefix,\
+		random_sample_file, dr3_random_file
 
 #for development
 
@@ -32,7 +29,7 @@ def BGS_load_Data(limit = BGS_limit['mag']):
 	# load BGS eDR3 table
 	print('BGS load Data')
 	global BGS
-	BGS = Table.read(Folder + 'Data/' + BGS_eDR3_file)
+	BGS = Table.read(Folder + 'Data/' + BGS_DR3_file)
 	BGS = BGS[BGS['phot_g_mean_mag'] < limit]
 	gamma = np.maximum(pow(10, 0.2 * (BGS['phot_g_mean_mag'] - 18)), 1)
 	BGS['psi'] = BGS['astrometric_sigma5d_max'] / (1.2 * gamma)
@@ -102,7 +99,7 @@ def BGS_mc_Gill():
 		else: pf.plot_psi(BGS,psi,out, None)
 
 	return out 
-
+'''
 def BGS_load_dr2(dist_limit = DR2_limit['dist'], mag_limit = DR2_limit['mag']):
 	# load Gaia best DR2 neighbour 
 	# validate if it is a true match
@@ -176,7 +173,7 @@ def BGS_dr2_dr3_propermotion(pm_limit = BGS_limit['pm'], \
 	
 	pm[miss_match] = [0.,0.]
 	pm_dict = dict(zip(BGS['source_id'],pm))
-	return out, good, bad, pm_dict
+	return out, good, bad, pm_dict'''
 
 
 def BGS_pos_error(limit = BGS_limit['pos_err']):
@@ -196,8 +193,8 @@ def main():
 	tt.append(time.time())
 	if 'BGS' not in globals():
 		BGS_load_Data()
-	if make_plots:
-		BGS_load_dr2()
+	'''if make_plots:
+		BGS_load_dr2()'''
 	tt.append(time.time())
 	good_ruwe = BGS_ruwe()
 	good_gof = BGS_gof()
@@ -205,11 +202,12 @@ def main():
 	good_pos = BGS_pos_error()
 	_ = BGS_mc_Gill()
 
-	tt.append(time.time())
+	'''tt.append(time.time())
 	inDR2,goodDR2,bad_DR2, pmDR2 = BGS_dr2_dr3_propermotion()
-	badDR2 = np.isin(BGS["source_id"], bad_DR2_BGS['dr3_source_id'])
+	badDR2 = np.isin(BGS["source_id"], bad_DR2_BGS['dr3_source_id'])'''
 	tt.append(time.time())
-	good = good_ruwe & good_gof & good_px & good_pos & (badDR2 == False)
+	good = good_ruwe & good_gof & good_px & good_pos 
+	'''& (badDR2 == False)'''
 	good_source_ID = BGS['source_id'][good]
 
 	tt.append(time.time())
@@ -219,13 +217,13 @@ def main():
 		print(Folder + 'Results/BGS.good' +prefix +  form_out[0])
 		BGS[good].write(Folder+'Results/BGS.good' + prefix + form_out[0], \
 			format = form_out[1], overwrite = True)
-		print('save bad DR2 matches')
+		'''print('save bad DR2 matches')'''
 		print(Folder + 'Results/BGS.bad' +prefix+ form_out[0])
 		BGS_BAD = BGS[good==False]
 		BGS_BAD["out_ruwe"]= Column(good_ruwe[good==False] == False)
 		BGS_BAD["out_gof"]= Column(good_gof[good==False] == False)
 		BGS_BAD["out_px"]= Column(good_px[good==False] == False)
-		BGS_BAD["dr2_out"]= Column(badDR2[good==False])
+		'''BGS_BAD["dr2_out"]= Column(badDR2[good==False])'''
 		BGS_BAD["out_pos"]= Column(good_pos[good==False] == False)
 
 		BGS_BAD.write(Folder + 'Results/BGS.bad' \
@@ -234,7 +232,8 @@ def main():
 	tt = np.array(tt)
 	cpt = tt[1:] - tt[:-1]
 	#print('BGS:', *(cpt))
-	return good_source_ID, bad_DR2, pmDR2
+	return good_source_ID
+	''', bad_DR2, pmDR2'''
 
 
 
