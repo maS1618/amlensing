@@ -18,7 +18,7 @@ def broadcast():
 	global Folder, BGS_DR3_file, BGS_limit,\
 		 zeropoint,save_table_process,make_plots, form_out, prefix,\
 		random_sample_file, dr3_random_file
-	from setup import Folder, BGS_eDR3_file, DR2_BGS_file, BGS_limit,\
+	from setup import Folder, BGS_DR3_file, BGS_limit,\
 		 zeropoint,save_table_process,make_plots, form_out, prefix,\
 		random_sample_file, dr3_random_file
 
