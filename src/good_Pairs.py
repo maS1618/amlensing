@@ -79,5 +79,6 @@ def Filter_sim_px(rp, limit = Pair_limit['px']):
 		pf.plot_sim_px(rp,F_px_1)
 	return F_px_1 | F_px_2
 
-All_filter = [Filter_sim_pm, Filter_sim_px', Filter_sim_pm_DR2']
+All_filter = [Filter_sim_pm, Filter_sim_px]
+#, Filter_sim_pm_DR2
 
