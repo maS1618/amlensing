@@ -37,8 +37,8 @@ results = Table.read(dr3_file, format = "fits")
 
 # category 
 all_results = np.ones(len(results), dtype = bool)
-hpms = results['pmra']**2+results['pmdec']**2>150**2
-g18 = results["ob_phot_g_mean_mag"]<18
+hpms = results['pmRA_x']**2+results['pmdec']**2>150**2
+g18 = results["Gmag"]<18
 WD = abs(results["mass"]- 0.65)< 1e-6
 lowmass = results["mass"] < 0.65 - 1e-6
 solarMass = results["mass"] > 0.65 + 1e-6
@@ -48,8 +48,8 @@ cathegories = {'all':all_results,
 	'White Dwarfs':WD,
 	'Mass < 0.65Msun':lowmass,
 	'Mass > 0.65Msun':solarMass}
-deltaG6 = results["ob_phot_g_mean_mag"]-  results["phot_g_mean_mag"] < 6
-deltaG3 = results["ob_phot_g_mean_mag"]-  results["phot_g_mean_mag"] < 3
+deltaG6 = results["Gmag"]-  results["phot_g_mean_mag"] < 6
+deltaG3 = results["Gmag"]-  results["phot_g_mean_mag"] < 3
 # criterium 
 shift1 = results['shift_plus']>1
 shift1lum = results['shift_lum']>1
@@ -73,7 +73,7 @@ for cat in cathegories.keys():
 	diffstars = len(np.unique(results[current]['source_id']))
 	n_events = [np.sum(current&dg) for dg in [all_results,deltaG3,deltaG6]]
 	n_nextdecade = [np.sum(nextdecade&current&dg) for dg in [all_results,deltaG3,deltaG6]]
-	dg0 = np.sum(current & (results["ob_phot_g_mean_mag"]-results["phot_g_mean_mag"] < 0))
+	dg0 = np.sum(current & (results["Gmag"]-results["phot_g_mean_mag"] < 0))
 	evp = []
 	evp1m = []
 	for dg in [all_results,deltaG3,deltaG6]:

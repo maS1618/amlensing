@@ -17,10 +17,11 @@ cpy = 0
 blacklist = 1
 
 download_data = False
-if len(argv)>0:
-    if argv[0] == "download_data": 
-        download_data = True
-        argv = argv[1:]
+# if len(argv)>0:
+#     if argv[0] == "download_data": 
+#         download_data = True
+#         argv = argv[1:]
+
 # read command imput
 while i < len(argv):
 

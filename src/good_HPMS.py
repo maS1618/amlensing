@@ -17,28 +17,28 @@ def load_Data():
 	global HPMS
 	HPMS = Table.read(Folder + 'Data/' + HPMS_DR3_file)
 
-'''def load_GCNS():
-	print('HPMS load GCNS')
-	global GCNS_cat, GCNS_reject, GCNS_reject_good, GCNS_reject_bad
-	GCNS_cat = Table.read(Folder + 'Data/' + GCNS_cat_file)
-	GCNS_reject = Table.read(Folder + 'Data/' + GCNS_reject_file)
-	GCNS_reject_good = GCNS_reject[np.where(GCNS_reject['GCNS_PROB'] > 0.38)]
-	GCNS_reject_bad = GCNS_reject[np.where(GCNS_reject['GCNS_PROB'] < 0.38)]'''
+# def load_GCNS():
+# 	print('HPMS load GCNS')
+# 	global GCNS_cat, GCNS_reject, GCNS_reject_good, GCNS_reject_bad
+# 	GCNS_cat = Table.read(Folder + 'Data/' + GCNS_cat_file)
+# 	GCNS_reject = Table.read(Folder + 'Data/' + GCNS_reject_file)
+# 	GCNS_reject_good = GCNS_reject[np.where(GCNS_reject['GCNS_PROB'] > 0.38)]
+# 	GCNS_reject_bad = GCNS_reject[np.where(GCNS_reject['GCNS_PROB'] < 0.38)]
 
 
-'''def match_GCNS():
-	print('HPMS match GCNS')
-	global index_GCNS_cat, index_GCNS_reject_good, index_GCNS_reject_bad
-	global HPMS_in_GCNS_cat, HPMS_in_GCNS_reject_good, HPMS_in_GCNS_reject_bad
-	index_GCNS_cat = np.isin(HPMS['source_id'], GCNS_cat['SOURCE_ID'])
-	index_GCNS_reject_good = \
-			np.isin(HPMS['source_id'], GCNS_reject_good['SOURCE_ID'])
-	index_GCNS_reject_bad = \
-			np.isin(HPMS['source_id'], GCNS_reject_bad['SOURCE_ID'])
-	HPMS_in_GCNS_cat = HPMS[index_GCNS_cat]
-	HPMS_in_GCNS_reject_good = HPMS[index_GCNS_reject_good]
-	HPMS_in_GCNS_reject_bad = HPMS[index_GCNS_reject_bad]
-	'''
+# def match_GCNS():
+# 	print('HPMS match GCNS')
+# 	global index_GCNS_cat, index_GCNS_reject_good, index_GCNS_reject_bad
+# 	global HPMS_in_GCNS_cat, HPMS_in_GCNS_reject_good, HPMS_in_GCNS_reject_bad
+# 	index_GCNS_cat = np.isin(HPMS['source_id'], GCNS_cat['SOURCE_ID'])
+# 	index_GCNS_reject_good = \
+# 			np.isin(HPMS['source_id'], GCNS_reject_good['SOURCE_ID'])
+# 	index_GCNS_reject_bad = \
+# 			np.isin(HPMS['source_id'], GCNS_reject_bad['SOURCE_ID'])
+# 	HPMS_in_GCNS_cat = HPMS[index_GCNS_cat]
+# 	HPMS_in_GCNS_reject_good = HPMS[index_GCNS_reject_good]
+# 	HPMS_in_GCNS_reject_bad = HPMS[index_GCNS_reject_bad]
+	
 
 def HPMS_check_parallax(limit = HPMS_limit['px']):
 	# check if parallax significance
@@ -62,8 +62,8 @@ def HPMS_n_obs_sig_g_flux(power = HPMS_limit['n_obs_sig_g_flux_power'],\
 	b =  np.power(HPMS['phot_g_n_obs'].data *1e0, power)
 	out =a*b> limit 
 	print('HPMS NvsF:', np.sum(out), '/', len(out))
-	if make_plots:
-		pf.plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit)
+	# if make_plots:
+	# 	pf.plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit)
 	return out
 
 def HPMS_check_phot(cat = None,limit = HPMS_limit['mag']):
@@ -74,27 +74,26 @@ def HPMS_check_phot(cat = None,limit = HPMS_limit['mag']):
 	print('HPMS photG:', np.sum(out), '/', len(out))
 	return out
 
-'''def HPMS_check_GCNS():
-	# check if GNCS_prob > 0.38	
-	out = index_GCNS_cat | index_GCNS_reject_good
-	print('HPMS GCNS good:', np.sum(out), '/', len(out),\
-		np.sum(index_GCNS_cat))
-	return out
+# def HPMS_check_GCNS():
+# 	# check if GNCS_prob > 0.38	
+# 	out = index_GCNS_cat | index_GCNS_reject_good
+# 	print('HPMS GCNS good:', np.sum(out), '/', len(out),\
+# 		np.sum(index_GCNS_cat))
+# 	return out
 
 
-def HPMS_check_GCNS_bad():
-	# check if GNCS_prob < 0.38	
-	out = index_GCNS_reject_bad
-	print('HPMS GCNS bad:', np.sum(out), '/', len(out))
-	return out'''
+# def HPMS_check_GCNS_bad():
+# 	# check if GNCS_prob < 0.38	
+# 	out = index_GCNS_reject_bad
+# 	print('HPMS GCNS bad:', np.sum(out), '/', len(out))
+# 	return out
 
-#note here that --main-- is first running the load_data function, 
 def main():
 	broadcast()
 	tt = []
 	tt.append(time.time())
 	if 'HPMS' not in globals():
-		load_Data()
+		load_Data() #this is loading data from the dr3 HPMS file
 	tt.append(time.time())
 	'''if 'GCNS_cat' not in globals():
 		load_GCNS()
@@ -108,7 +107,7 @@ def main():
 	ns_bad = HPMS_check_GCNS_bad()'''
 	phot = HPMS_check_phot()
 	NvsF = HPMS_n_obs_sig_g_flux()
-	good = (px & rw) & (ns_bad == False) & phot & NvsF
+	good = (px & rw) & phot & NvsF
 	print('HPMS good:', np.sum(good), '/', len(HPMS))
 	tt.append(time.time())
 	if save_table_process:

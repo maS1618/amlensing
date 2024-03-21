@@ -15,12 +15,12 @@ def calculate_Einsteinradius(tab):
 	tt = []
 	tt.append(time.time())
 	ThetaE = const_Einsteinradius * np.sqrt(tab['mass']\
-		* (tab['parallax'] - tab['ob_parallax']))
+		* (tab['parallax'] - tab['Plx']))
 	ThetaE_error = ThetaE * 0.5 * np.sqrt(\
 		np.square(tab['mass_error'] / tab['mass']) \
 		+ (np.square(tab['parallax_error']) \
-		+ np.square(tab['ob_parallax_error'])) \
-		/ np.square(tab['parallax'] - tab['ob_parallax']))
+		+ np.square(tab['e_Plx'])) \
+		/ np.square(tab['parallax'] - tab['Plx']))
 	tt.append(time.time())
 	ThetaE = MaskedColumn(ThetaE,dtype = 'float64', unit = 'mas', \
 		description = 'Einstein radius of the event')
@@ -239,7 +239,7 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 		# 	ThetaE_error2 = np.random.normal(ThetaE, ThetaE_error, \
 		# 		(nMC,len(dist))).T
 		# determine Flux Ratio
-		FL_FS = pow(100,(tab['ob_phot_g_mean_mag'] - tab['phot_g_mean_mag'])/5)
+		FL_FS = pow(100,(tab['Gmag'] - tab['phot_g_mean_mag'])/5)
 
 
 		# determine normed impact parameter u

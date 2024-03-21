@@ -32,7 +32,7 @@ def BGS_load_Data(limit = BGS_limit['mag']):
 	BGS = Table.read(Folder + 'Data/' + BGS_DR3_file)
 	BGS = BGS[BGS['phot_g_mean_mag'] < limit]
 	gamma = np.maximum(pow(10, 0.2 * (BGS['phot_g_mean_mag'] - 18)), 1)
-	BGS['psi'] = BGS['astrometric_sigma5d_max'] / (1.2 * gamma)
+	BGS['psi'] = BGS['amax'] / (1.2 * gamma)
 	print('BGS:', len(BGS))
 
 def BGS_ruwe(limit = BGS_limit['ruwe']):
@@ -55,8 +55,8 @@ def BGS_gof(limit = BGS_limit['ruwe']):
 	f = lambda x: -4.80459 + 0.000520143 * np.sqrt(4.964e7 * x + 3.57727e7)
 	#f(2) = 1.24; f(1.4) = 0.532
 	
-	out = BGS['astrometric_gof_al'] \
-		/ np.sqrt(BGS['astrometric_n_good_obs_al']) < f(limit)
+	out = BGS['gofAL'] \
+		/ np.sqrt(BGS['NgAL']) < f(limit)
 
 	if make_plots: 
 		pf.plot_gof(BGS,out,limit)

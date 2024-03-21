@@ -48,22 +48,22 @@ def timescales(tab):
         if i%500==0 : print(i)
         ra = row['ra']
         dec = row['dec']
-        pmra = row['pmra']
+        pmRA_x = row['pmRA_x']
         pmdec = row['pmdec']
         parallax = row['parallax']
         ThetaE = row['ThetaE']
-        ob_ra = row['ob_ra']
-        ob_dec = row['ob_dec']
-        ob_pmra = row['ob_pmra'] if not np.isnan(row['ob_pmra']) else (row['ob_displacement_ra_doubled'] if not np.isnan(row['ob_displacement_ra_doubled']) else 0)
-        ob_pmdec = row['ob_pmdec'] if not np.isnan(row['ob_pmdec']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
-        ob_parallax = row['ob_parallax'] if not np.isnan(row['ob_parallax'])  else 4.740/75 *np.sqrt(ob_pmra*ob_pmra +ob_pmdec*ob_pmdec)
+        RAdeg = row['RAdeg']
+        DEdeg = row['DEdeg']
+        pmRA_x = row['pmRA_x'] if not np.isnan(row['pmRA_x']) else (row['ob_displacement_ra_doubled'] if not np.isnan(row['ob_displacement_ra_doubled']) else 0)
+       pmDE_x = row['pmDE_x'] if not np.isnan(row['pmDE_x	']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
+        ob_parallax = row['ob_parallax'] if not np.isnan(row['ob_parallax'])  else 4.740/75 *np.sqrt(pmRA_x*pmRA_x +pmDE_x	*pmDE_x	)
         
-        pos_lens = astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, epoch_predef, 
+        pos_lens = astrometry.movePm_parallax(ra, dec, pmRA_x, pmdec, parallax, epoch_predef, 
             earthVec = pos_sun_predef)
-        pos_source = astrometry.movePm_parallax(ob_ra, ob_dec, ob_pmra, ob_pmdec, ob_parallax,
+        pos_source = astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x, ob_parallax,
             epoch_predef, earthVec = pos_sun_predef)
-        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, row['TCA']-2016)
-        pos_source_max=astrometry.movePm_parallax(ob_ra, ob_dec, ob_pmra, ob_pmdec, ob_parallax,
+        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmRA_x, pmdec, parallax, row['TCA']-2016)
+        pos_source_max=astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x	, ob_parallax,
             row['TCA']-2016)
         lens_ra, lens_dec = astrometry.dirVecToCelCoos(pos_lens)
         source_ra, source_dec = astrometry.dirVecToCelCoos(pos_source)
@@ -75,7 +75,7 @@ def timescales(tab):
         shift_plus = microlensing.calc_shift_plus(dist, ThetaE)
 
         shift_max = microlensing.calc_shift_plus(dist_max, ThetaE)
-        print(ob_ra,ob_dec,ob_pmra,ob_pmdec,ob_parallax)
+        print(RAdeg,DEdeg,pmRA_x,pmDE_x	,ob_parallax)
         print(np.max(shift_plus), np.where(shift_plus == np.max(shift_plus)))
         index_max = np.where(shift_plus == np.max(shift_plus))[0][0]
 
@@ -101,7 +101,7 @@ def timescales(tab):
         # plt.legend
         if ts_01[-1]>100: 
             fig = plot_timescales(new_source_ra, new_source_dec, max_source_ra, max_source_dec,shift_plus, dist2)
-            fig.savefig(f'{folder}/{row["ob_source_id"]}.png')
+            fig.savefig(f'{folder}/{row["Source"]}.png')
             print(row["shift_plus"], max(shift_plus))
             plt.show()
 

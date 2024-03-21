@@ -1,11 +1,11 @@
 '''
-load a list of all High proper motion stars
-must contains the Gaia source ID = 'hpms_source_id'
+loads a list of all High proper motion stars
+must contain the Gaia source ID = 'hpms_source_id'
 contains a boolean if the HPMS can be used (hpms_good), 
 if not all HPMS in the list are used 
 
-load a list of all background stars, 
-must contains the Gaia source ID = 'source_id'
+loads a list of all background stars, 
+must contain the Gaia source ID = 'source_id'
 contains a boolean if the HPMS can be used (bgs_good), 
 if not all bgs in the list are used
 '''
@@ -58,13 +58,17 @@ def load_raw_pairs():
 		# convert metadata to astropy description
 		if 'TCOMM1' in raw_cands.meta.keys():
 			for j,i in enumerate(raw_cands.keys().copy()):
-				raw_cands[i].description = raw_cands.meta.pop('TCOMM%i'%(j+1))
+				if j<18:
+					raw_cands[i].description = raw_cands.meta.pop('TCOMM%i'%(j+1))
 
 	# mask None values	
 	if 'roi' in raw_cands.colnames: 
 		raw_cands.remove_column("roi")
 	raw_cands = Table(raw_cands, masked = True, copy = False)
 	for i in raw_cands.colnames:
+		print(i)
+		if i == "DR3Name" or i == "VarFlag" or i == "APF" or i =="Lib":
+			continue
 		if any(np.isnan(raw_cands[i].astype(float))): 
 			raw_cands[i].mask = np.isnan(raw_cands[i].astype(float))
 		else: 
@@ -139,14 +143,14 @@ def check_bgs():
 	if bgs_file == 'good_BGS.py':
 		# Find good BGS using the good_HPMS.py script and the full gaia table 
 		print('Find good BGS')
-		good_BGS_source_ID, _ , pmDR2 = GB.main()
+		good_BGS_source_ID = GB.main()
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
-			good_raw_cands_HPMS['ob_source_id'], good_BGS_source_ID)]
+			good_raw_cands_HPMS['Source'], good_BGS_source_ID)]
 
 		# include DR2- DR3 propermotion
 		'''DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-			for i in good_raw_cands_BGS['ob_source_id']])
+			for i in good_raw_cands_BGS['Source']])
 		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
 			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
 			+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
@@ -171,7 +175,7 @@ def check_bgs():
 		good_raw_cands_BGS = good_raw_cands_HPMS
 		good_BGS_source_ID, _ , pmDR2 = GB.main()
 		DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-			for i in good_raw_cands_BGS['ob_source_id']])
+			for i in good_raw_cands_BGS['Source']])
 
 		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
 			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
@@ -251,7 +255,7 @@ def main(redo = 0):
 
 	if make_plots:
 		bgs_good = GB.BGS[np.isin(
-			GB.BGS['source_id'], good_raw_cands["ob_source_id"])]
+			GB.BGS['source_id'], good_raw_cands["Source"])]
 		pf.plot_psi_part2(bgs_good)
 
 		pf.plot_pos_err(data=bgs_good)

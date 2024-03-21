@@ -34,7 +34,7 @@ comands: (defaultvalues are stored in setup.py)
 	-s --save_table [bool]:			saves different steps as table (None = True) 
 	-f --filter [bool]:			use filters for pairs (None = True)
 	-p --prefix [str]:			prefix for stored tables 
-	-b --blacklist [file]: 			list of ob_source_id's to remove from results
+	-b --blacklist [file]: 			list of Source's to remove from results
 						If file does not exist, no sources will be removed.
 Default parameters are defined in the setup.py script.
 

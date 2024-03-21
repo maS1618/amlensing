@@ -34,6 +34,7 @@ def parallel(string):
 
 	#print("parallel:", *cc)
 	data = Process_data(raw_cands,result_closest)
+	print(data)
 	# store output table temporary
 	f = open(string, 'wb')
 	pickle.dump(data, f)

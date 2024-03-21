@@ -1,5 +1,7 @@
 # Amlensing folder
 Folder = '/'.join(__file__.split('/')[:-2]) + '/'
+'''In essence, if your script is located at /home/user/project/scripts/myscript.py, 
+this line of code will set Folder to /home/user/project/, effectively moving up two levels from the script's location.'''
 
 # Ignore Warnings
 import warnings
@@ -14,7 +16,7 @@ prefix = ''
 do_filter = 1
 # Files have to be located in Data or given as relative path from current working directory.
 # Raw Pairs File 
-raw_cands_table = 'rawcands.fits' 
+raw_cands_table = 'rawcands_new.fits' 
 
 # Method to determine good High Proper Motion Stars and BackGround Stars
 # If empty string: all source are belived to be good
@@ -26,18 +28,21 @@ hpms_file = 'good_HPMS.py'
 bgs_file = 'good_BGS.py'
 
 # Files to determine Good HPMS and BGS
-HPMS_DR3_file = 'gaia_dr3_hpms.fits' #all potential HPMS
+HPMS_DR3_file = 'gaia_dr3_hpms_new.fits' #all potential HPMS
+
 #GCNS_cat_file = 'GCNS_cat.fits' #Gaia catalogue of nearby stars
 #GCNS_reject_file= 'GCNS_reject.fits' #Gaia catalogue of nearby stars, 
 									 #rejected sources
 #HPMS_spur_file = 'HPMS_spur.fits' #fidility values from J. Rybizki
 								  #et al. 2021 (optional)
 
-BGS_DR3_file = 'gaia_dr3_bgs.fits' #all potential BGS
+BGS_DR3_file = 'gaia_dr3_bgs_new.fits' #all potential BGS
 #gaiaedr3.dr2_neighbourhood for all BGS
 #DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits' 
+
 #gaiaedr3 random sample, used for plots only 
 random_sample_file = 'random_sample.fits'
+
 #dr2_random_file = 'dr2_random.fits'
 dr3_random_file = 'dr3_random.fits'
 
@@ -65,14 +70,14 @@ zeropoint = 0	 # Used in Filters,
 # Default values for NONE in the raw pairs
 mask_values = {'phot_rp_mean_mag': 0,
 		'phot_bp_mean_mag': 0,
-		'ob_pmra': 0,
-		'ob_pmdec': 0,
-		'ob_pmra_error': 5,
-		'ob_pmdec_error': 5,
-		'ob_parallax': zeropoint,
-		'ob_parallax_error': 3.,
-		'ob_phot_rp_mean_mag': 0,
-		'ob_phot_bp_mean_mag': 0}
+		'pmRA_x': 0,
+		'pmDE_x': 0,
+		'e_pmRA': 5,
+		'e_pmDE': 5,
+		'Plx': zeropoint,
+		'e_Plx': 3,
+		'RPmag': 0,
+		'BPmag': 0}
 
 # Gaia reference epoch
 Gaia_epoch = 2016.
@@ -97,10 +102,10 @@ BGS_limit = {
 
 '''# limits for DR2 Match
 # used in good_BGS.py
-'''DR2_limit = {
+DR2_limit = {
 	'dist': 400, 
 	'pm_bad': 1000,
-	'mag': 0.3}'''
+	'mag': 0.3}
 '''
 # limits for criteria on HPMS-BGS Pairs 
 # used in good_Pairs.py

@@ -92,15 +92,15 @@ def plot_gof(BGS,out, limit):
 	f = lambda x: -4.80459 + 0.000520143 * np.sqrt(4.964e7 * x + 3.57727e7)
 	fig = plt.figure("gof")
 	fig.clf()
-	loglog(BGS['astrometric_n_good_obs_al'],\
-		BGS['astrometric_gof_al'],color = red, \
+	loglog(BGS['NgAL'],\
+		BGS['gofAL'],color = red, \
 		ms = 0.5 , label = "excluded sources" )
-	loglog(BGS['astrometric_n_good_obs_al'][out],\
-		BGS['astrometric_gof_al'][out],color = blue, ms = 0.5, \
+	loglog(BGS['NgAL'][out],\
+		BGS['gofAL'][out],color = blue, ms = 0.5, \
 		label = "Sou_GoF/sqrt(Sou_N) < %.2f"%f(limit))
 	good_ruwe = BGS['ruwe'] < limit
-	loglog(BGS['astrometric_n_good_obs_al'][good_ruwe],\
-		BGS['astrometric_gof_al'][good_ruwe],color = green, \
+	loglog(BGS['NgAL'][good_ruwe],\
+		BGS['gofAL'][good_ruwe],color = green, \
 		ms = 0.5,  label = "RUWE < %.1f"%limit)		
 	xlim = np.array(plt.xlim())
 	plt.loglog(xlim, np.sqrt(xlim) * f(limit),color = limitcolor,\
@@ -137,7 +137,7 @@ def plot_psi(BGS,psi,out,random_sample = None):
 	if random_sample is not None:
 		rgamma = np.maximum(pow(10, \
 			0.2 * (random_sample['phot_g_mean_mag'] - 18)), 1)
-		rpsi = random_sample['astrometric_sigma5d_max'] / (1.2 * rgamma)
+		rpsi = random_sample['amax'] / (1.2 * rgamma)
 		semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 			color = grey, ms = 0.05,  zorder = 3, \
 			label = "random sample")
@@ -162,7 +162,7 @@ def plot_psi_result_part_1(random_sample):
 	fig.clf()
 	rgamma = np.maximum(
 		pow(10, 0.2 * (random_sample['phot_g_mean_mag'] - 18)), 1)
-	rpsi = random_sample['astrometric_sigma5d_max'] / (1.2 * rgamma)
+	rpsi = random_sample['amax'] / (1.2 * rgamma)
 	semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 		color = grey, ms = 0.05,  zorder = 0, label = "random sample")
 	c = np.arange(5.5,22,0.1)
@@ -174,7 +174,7 @@ def plot_psi_result_part_1(random_sample):
 	plt.ylabel(r"$\Psi$")
 	plt.xlabel(r"G [mag]")
 
-def plot_DR2_match(DR2_BGS,good,excluded,dist_limit,dr2_random = None):
+'''def plot_DR2_match(DR2_BGS,good,excluded,dist_limit,dr2_random = None):
 	fig = plt.figure("DR2")
 	fig.clf()
 	if dr2_random is not None:
@@ -220,9 +220,9 @@ def plot_DR2_pm(d3,dr2,pp):
 	fivedr2	= twodr2==False
 
 
-	plot(d3[five & twodr2]["pmra"], pp[five & twodr2][:,0], \
+	plot(d3[five & twodr2]["pmRA_x"], pp[five & twodr2][:,0], \
 		color = blue, label = "2par in dr2")
-	plot(d3[fivedr2]["pmra"], pp[fivedr2][:,0], color = green,\
+	plot(d3[fivedr2]["pmRA_x"], pp[fivedr2][:,0], color = green,\
 		label = "5par in dr2")
 
 	ax2 = plt.subplot(122)
@@ -246,7 +246,7 @@ def plot_DR2_pm(d3,dr2,pp):
 	for lh in leg.legendHandles: 
 		lh._legmarker.set_alpha(1)
 		lh._legmarker.set_markersize(5)
-	if ion: plt.pause(0.1)
+	if ion: plt.pause(0.1)'''
 
 def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None): 
 	fig = plt.figure("pos_err")
@@ -298,7 +298,7 @@ def plot_HPMS(HPMS,good):
 	fig = plt.figure("HPMS")
 	phot = HPMS['phot_g_mean_mag']<21
 	fig.clf()
-	pmtot = np.sqrt(HPMS['pmra'] * HPMS['pmra'] + HPMS['pmdec']*HPMS['pmdec'])
+	pmtot = np.sqrt(HPMS['pmRA_x'] * HPMS['pmRA_x'] + HPMS['pmdec']*HPMS['pmdec'])
 	plt.loglog(pmtot[phot&(good==False)],\
 	 	HPMS[phot&(good==False)]['parallax'],'o', color =red, ms = 0.5, 
 	 	label = 'excluded high-proper-motion-stars')
@@ -309,8 +309,8 @@ def plot_HPMS(HPMS,good):
 	plt.ylabel(r"$\varpi$ [mas]")
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-	 	lh._legmarker.set_alpha(1)
-	 	lh._legmarker.set_markersize(5)
+		lh._legmarker.set_alpha(1)
+		lh._legmarker.set_markersize(5)
 	if ion: plt.pause(0.1)
 
 def plot_ruwe(HPMS,out):
@@ -384,11 +384,11 @@ def plot_delta_pm_ax1(rp,FF):
 	fig.clf()
 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
 	ax1 = plt.subplot(121)
-	plot(rp['pmra'] - rp['ob_pmra'],\
-		rp['pmdec'] - rp['ob_pmdec'], color = red,  ms = 0.5,\
+	plot(rp['pmRA_x'] - rp['pmRA_x'],\
+		rp['pmdec'] - rp['pmDE_x	'], color = red,  ms = 0.5,\
 		label = 'excluded Pairs')
-	plot(rp['pmra'][FF] - rp['ob_pmra'][FF], \
-		rp['pmdec'][FF] - rp['ob_pmdec'][FF], color = blue, ms = 0.5,\
+	plot(rp['pmRA_x'][FF] - rp['pmRA_x'][FF], \
+		rp['pmdec'][FF] - rp['pmDE_x	'][FF], color = blue, ms = 0.5,\
 		label = 'Pairs')
 	plt.xlabel(r"$\mu_{\alpha\star} - Sou\_\mu_{\alpha\star}$ [mas/yr]")
 	plt.ylabel(r"$\mu_{\delta} - Sou\_\mu_{\delta}$ [mas/yr]")
@@ -404,12 +404,12 @@ def  plot_delta_pm_ax2(rp,F_pm_3,FF):
 	fig = plt.figure("delta_pm", figsize = [6.4,3])
 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
 	ax2 = plt.subplot(122)
-	plot(rp[F_pm_3]['pmra'] \
+	plot(rp[F_pm_3]['pmRA_x'] \
 		- rp[F_pm_3]['ob_displacement_ra_doubled'],\
 		rp[F_pm_3]['pmdec'] \
 		- rp[F_pm_3]['ob_displacement_dec_doubled'],\
 		color = red,  ms = 0.5)
-	plot(rp['pmra'][FF] - rp['ob_displacement_ra_doubled'][FF], \
+	plot(rp['pmRA_x'][FF] - rp['ob_displacement_ra_doubled'][FF], \
 		rp['pmdec'][FF] - rp['ob_displacement_dec_doubled'][FF], \
 		color = blue, ms = 0.5)
 	plt.xlabel(r'$\mu_{\alpha^{\star}} - \Delta \phi_{\rm \times2,\,\alpha^{\star}}/1{\rm yr}$ [mas/yr]')
@@ -424,14 +424,14 @@ def plot_sim_px(rp= None,F_px_1=None, data = None):
 	fig = plt.figure("sim_px")
 	if rp is not None:
 		semilogx(rp['parallax'], \
-			rp['ob_parallax'],  color = red, label='excluded Pairs')
+			rp['Plx'],  color = red, label='excluded Pairs')
 		semilogx(rp[F_px_1]['parallax'], \
-			rp[F_px_1]['ob_parallax'], color = blue, label='Pairs')
+			rp[F_px_1]['Plx'], color = blue, label='Pairs')
 		plt.xlabel(r'$\varpi$ [mas]')
 		plt.ylabel(r'$Sou\_\varpi$ [mas]')
 	if data is not None:
 		semilogx(data['parallax'], \
-			data['ob_parallax'],  color = yellow, label='Good Candidates')
+			data['Plx'],  color = yellow, label='Good Candidates')
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
 			lh._legmarker.set_alpha(1)
@@ -465,7 +465,7 @@ def plot_psi_part2(data):
 def plot_sim_px_part2(data):
 	fig = plt.figure("sim_px")
 	semilogx(data['parallax'], \
-		data['ob_parallax'],  color = yellow)
+		data['Plx'],  color = yellow)
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
 		lh._legmarker.set_alpha(1)
@@ -478,11 +478,11 @@ def plot_sim_px_part2(data):
 
 def plot_HPMS_part2(data):
 	plt.figure("HPMS")
-	cc = data['ob_parallax']>0
+	cc = data['Plx']>0
 	xlim = plt.xlim()
 	ylim = plt.ylim()
-	loglog(np.sqrt(data[cc]['ob_pmra']**2+data[cc]['ob_pmdec']**2),
-		data[cc]['ob_parallax'],color = green, ms = 0.5, 
+	loglog(np.sqrt(data[cc]['pmRA_x']**2+data[cc]['pmDE_x	']**2),
+		data[cc]['Plx'],color = green, ms = 0.5, 
 		label = 'background stars')
 	plt.xlim([1,xlim[1]])
 	plt.ylim([0.1,ylim[1]])
@@ -532,10 +532,10 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 		plt.figure('psi_result')
 
 		bl = np.isin(BGS['source_id'],\
-			result[blacklist]['ob_source_id'])
+			result[blacklist]['Source'])
 		bl2= bl & (BGS['dec'] < -30)
 
-		res = np.isin(BGS['source_id'],result[filtered]['ob_source_id'])
+		res = np.isin(BGS['source_id'],result[filtered]['Source'])
 		g = BGS['phot_g_mean_mag'][res]
 		g_BL = BGS['phot_g_mean_mag'][bl]
 		g_BL2 = BGS['phot_g_mean_mag'][bl2]
@@ -546,7 +546,7 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 			psi_BL2 = BGS['psi'][bl2]
 		else:
 			gamma = np.maximum(pow(10, 0.2 * (BGS['phot_g_mean_mag'] - 18)), 1)
-			psi_bgs = BGS['astrometric_sigma5d_max'] / (1.2 * gamma)
+			psi_bgs = BGS['amax'] / (1.2 * gamma)
 			psi = psi_bgs[res]
 			psi_BL = psi_bgs[bl]
 			psi_BL2 = psi_bgs[bl2]
@@ -599,11 +599,11 @@ def plot_results(result):
 						fig = plt.figure('Results_'+typ+add)
 					else: fig = plt.figure('Results_2030_'+typ+add)
 					which = result['star_type']==typ
-				which = which & ((result['ob_phot_g_mean_mag']
+				which = which & ((result['Gmag']
 					-result['phot_g_mean_mag']) < mag_dif)
 				ax = plt.gca()
-				twopar = which & (result['ob_parallax'] == 0)
-				fivepar = which & (result['ob_parallax'] != 0)
+				twopar = which & (result['Plx'] == 0)
+				fivepar = which & (result['Plx'] != 0)
 				plt.semilogy(result[twopar]['TCA'],result[twopar]['shift_plus'],
 					'.', color = grey, zorder = -5, 
 					label = '2 parameter solution')
@@ -681,8 +681,8 @@ def plot_results(result):
 		fig = plt.figure('Magnification_'+typ)
 		which = which & (result['magnification']> 0.001)
 		ax = plt.gca()
-		twopar = which & (result['ob_parallax'] == 0)
-		fivepar = which & (result['ob_parallax'] != 0)
+		twopar = which & (result['Plx'] == 0)
+		fivepar = which & (result['Plx'] != 0)
 		plt.semilogy(result[twopar]['TCA'],result[twopar]['magnification'],'.', 
 			color = 'grey',zorder = -5,	label = '2 parameter solution')
 		plt.errorbar(result[fivepar]['TCA'],result[fivepar]['magnification'],

@@ -118,24 +118,24 @@ def getGCDist_3Vec(pos1, pos2):
 		return 2e0 * np.arcsin(abs(dif) / 2e0) / DEG
 	return np.arccos(scalarprod)/DEG
 
-def movePm_3Vec(raDeg, decDeg, pmra, pmdec, timeGaia, foreshort = 0):
+def movePm_3Vec(raDeg, decDeg, pmRA_x, pmdec, timeGaia, foreshort = 0):
 	"""
 	returns cartesian coordinates for an object with pos ra, dec 
-	and pm pmra after Gaia epoch.
-	pmra has to have cos(dec) applied, position in deg prop.motion in mas 
+	and pm pmRA_x after Gaia epoch.
+	pmRA_x has to have cos(dec) applied, position in deg prop.motion in mas 
 	the time unit is yours to choose.
 	"""
 	ra, dec = raDeg*DEG, decDeg*DEG
 	sd, cd = np.sin(dec), np.cos(dec)
 	sa, ca = np.sin(ra), np.cos(ra)
-	pmra, pmdec = pmra * DEG / 3.6e6 , pmdec * DEG / 3.6e6
-	muAbs = np.sqrt(pmra**2 + pmdec**2);
+	pmRA_x, pmdec = pmRA_x * DEG / 3.6e6 , pmdec * DEG / 3.6e6
+	muAbs = np.sqrt(pmRA_x**2 + pmdec**2);
 	muTot = muAbs + 0.5e0 * foreshort * timeGaia;
 	if muAbs < 1e-20: # no proper motion 
 		dirVec = Vector3(cd*ca+0*timeGaia, cd*sa+0*timeGaia, sd+0*timeGaia)
 		return dirVec
 	# this is according to  
-	dirA = pmra / muAbs;
+	dirA = pmRA_x / muAbs;
 	dirD = pmdec / muAbs;
 	sinMot = np.sin(muTot * timeGaia);
 	cosMot = np.cos(muTot * timeGaia);
@@ -154,15 +154,15 @@ def parallax_correction(baryVec, earthVec, parallax):
 	return geoVec
 
 
-def movePm_parallax(raDeg, decDeg, pmra, pmdec, parallax, timeGaia, \
+def movePm_parallax(raDeg, decDeg, pmRA_x, pmdec, parallax, timeGaia, \
 		earthVec = None, foreshort = 0, gaia = False, ):
 	"""
 	returns cartesian coordinates for an object with pos ra, dec 
-	and pm pmra after Gaia epoch.
-	pmra has to have cos(dec) applied, position in deg, prop.motion and 
+	and pm pmRA_x after Gaia epoch.
+	pmRA_x has to have cos(dec) applied, position in deg, prop.motion and 
 	parallax in mas , the time in units of years after 2015.5
 	"""
-	baryVec = movePm_3Vec(raDeg, decDeg, pmra, pmdec, timeGaia, \
+	baryVec = movePm_3Vec(raDeg, decDeg, pmRA_x, pmdec, timeGaia, \
 		foreshort = foreshort)
 	if parallax >= zeropoint:
 		if earthVec is None:

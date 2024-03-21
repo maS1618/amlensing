@@ -6,7 +6,7 @@ import sys
 import time
 from astropy.table import vstack, Table , MaskedColumn # version >= 4.2
 
-import raw_data
+import raw_data #is useful for fill functions n stuff, after i remove the download functionality
 import good_BGS as GB
 import mass
 import microlensing
@@ -45,8 +45,8 @@ def approx(cand):
 	cApprox = find_closest.calc_approx_date(cand)
 	cand['approx_tca'] = cApprox[0]
 	cand['approx_dist'] = cApprox[1]
-	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmra']-cand['ob_pmra'])**2 \
-		+(cand['pmdec']-cand['ob_pmdec'])**2)\
+	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmRA_x']-cand['pmRA_x'])**2 \
+		+(cand['pmdec']-cand['pmDE_x'])**2)\
 		*np.sqrt(cand['ThetaE'] ** 4 /0.1**2+cand['approx_dist']*2),\
 		dtype = 'float64',unit = 'years', \
 		description = 'Expected duration of the event (shift > ~0.1mas')
@@ -153,9 +153,9 @@ def filter_events(table_out):
 					psi = 1
 			elif psi: BL2.append(int(line))
 			else: BL1.append(int(line))
-		BL1 = np.isin(table_out['ob_source_id'],BL1) \
+		BL1 = np.isin(table_out['Source'],BL1) \
 			| np.isin(table_out['source_id'],BL1)
-		BL2 = np.isin(table_out['ob_source_id'],BL2) \
+		BL2 = np.isin(table_out['Source'],BL2) \
 			| np.isin(table_out['source_id'],BL2)
 
 		aa = np.sum(FF)
@@ -164,9 +164,9 @@ def filter_events(table_out):
 		print('Excluded due to large Psi:', aa-bb)
 		print('Excluded due to no proper motion:', aa-cc)
 
-		#does blacklist include ob_source_id?
+		#does blacklist include Source?
 		BL = [int(i) for i in BL[BL.colnames[0]] if i[0] != '#']
-		blacklist = np.isin(table_out['ob_source_id'],BL) \
+		blacklist = np.isin(table_out['Source'],BL) \
 			| np.isin(table_out['source_id'],BL)
 
 		if setup.save_table_process: # save step to file
