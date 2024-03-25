@@ -18,11 +18,11 @@ def parallel(string):
 	f.close()
 	os.remove(string) # delete temporary file
 
-	if part ==0: print('Find closet approches')
+	if part ==0: print('Find closest approches (parallel)')
 	result_closest = []
 	cc = np.zeros(6)
 	tt=time.time()
-	# loop over row to finde closest approach
+	# loop over row to find closest approach
 	for i, row in enumerate(raw_cands):
 		if (i+1)%100 == 0 : # print progress
 			print('Core %i: %i/%i | %im:%is '%(part+1, i+1,len(raw_cands),\

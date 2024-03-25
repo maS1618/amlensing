@@ -97,7 +97,7 @@ def calc(cand, n_core = 4):
 			f.close()	
 
 		#parallel computing 
-		#(see calculation.py, forwars to microlensing.py and find_closest.py)
+		#(see calculation.py, forward to microlensing.py and find_closest.py)
 		res_par = Parallel(n_jobs = n_core)(delayed(calculation.parallel)(i) \
 				for i in instring)
 

@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")
 
 #------------------------------------------------------------------------------
 #Default values and files 
-n_core = 4
+n_core = 1
 prefix = ''
 do_filter = 1
 # Files have to be located in Data or given as relative path from current working directory.

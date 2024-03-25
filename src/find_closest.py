@@ -246,8 +246,7 @@ def estimate_Closest_parallax(row, gaia = True):
 		tt = np.array(tt)
 		cpt = tt[1:] - tt[:-1]
 		cpt = np.append(cpt, (tt55-tt44) / (len(a)+len(a2)))
-		return np.array([closest_date_vec, closest_dist_vec, \
-			closest_date_gaia_vec, closest_dist_gaia_vec]), cpt
+		return np.array([closest_date_vec, closest_dist_vec, closest_date_gaia_vec, closest_dist_gaia_vec]), cpt
 
 
 def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
