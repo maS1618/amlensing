@@ -43,7 +43,7 @@ def parallel(string):
 def single(raw_cands):
 	#raw_cands=raw_cands[:500]
 	result_closest = []
-	print('Find closet approches')
+	print('Find closest approches')
 	tt=time.time()
 	cc = np.zeros(6)
 	#print('HERE')

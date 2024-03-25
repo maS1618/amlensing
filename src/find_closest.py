@@ -65,9 +65,9 @@ def calc_approx_date(tab):
 	minDist = np.abs(delta_ra * delta_pmdec - delta_dec * delta_pmra) \
 		/ delta_pmtot
 	minDate =MaskedColumn(minDate,dtype = 'float64', unit = 'jyear',\
-		description = 'approximated date of the closest appoach ')	
+		description = 'approximated date of the closest appoach')	
 	minDist =MaskedColumn(minDist,dtype = 'float64', unit = 'mas', \
-		description = 'approximated separation at the closest appoach ')	
+		description = 'approximated separation at the closest appoach')	
 	return minDate,minDist
 
 

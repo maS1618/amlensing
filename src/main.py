@@ -48,6 +48,10 @@ def approx(cand):
 	cApprox = find_closest.calc_approx_date(cand)
 	cand['approx_tca'] = cApprox[0]
 	cand['approx_dist'] = cApprox[1]
+
+	print('approximated date of the closest appoach')
+	print('approximated separation at the closest appoach')
+
 	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmra']-cand['pmRA_x'])**2 \
 		+(cand['pmdec']-cand['pmDE_x'])**2)\
 		*np.sqrt(cand['ThetaE'] ** 4 /0.1**2+cand['approx_dist']*2),\
