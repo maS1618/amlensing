@@ -19,12 +19,14 @@ def broadcast():
 def Filter_sim_pm(rp, limit = Pair_limit['pm_sim_1'],\
 	limit_sim = Pair_limit['pm_sim_2']):
 	# non similar proper motion
-	F_pm_1= (rp['pmRA_x']-rp['pmra'])**2 + (rp['pmDE_x']-rp['pmdec'])**2 \
-			> limit_sim**2 * (rp['pmDE_x']**2 + rp['pmRA_x']**2)
-	F_pm_2 = rp['pmra']**2 + rp['pmdec']**2 \
-		< limit**2 * (rp['pmDE_x']**2 + rp['pmRA_x']**2)
+
+	F_pm_1= (rp['pmra']-rp['pmRA_x'])**2 + (rp['pmdec']- rp['pmDE_x'])**2 \
+			> limit_sim**2 * (rp['pmdec']**2 + rp['pmra']**2)
+	F_pm_2 = rp['pmRA_x']**2 + rp['pmDE_x']**2 \
+		< limit**2 * (rp['pmdec']**2 + rp['pmra']**2)
+
 	# Filter is not used for bgs without 5-parameter solution
-	F_pm_3 = rp['pmra'].mask 
+	F_pm_3 = rp['pmRA_x'].mask 
 
 	#print(rp['pmra'])
 	# print(np.sum(rp['pmDE_x'].mask ))
@@ -61,9 +63,9 @@ def Filter_sim_pm_DR2(rp, limit = Pair_limit['pm_sim_1'],\
 		< limit**2 * (rp['pmdec']**2 + rp['pmRA_x']**2)
 	
 	# Filter is not used for bgs with an 5-parameter solution 
-	two_parm = (rp['pmra'].mask)
+	two_parm = (rp['pmRA_x'].mask)
 	if any(two_parm) == False:
-		two_parm =  (rp['pmra'] == 1e20)
+		two_parm =  (rp['pmRA_x'] == 1e20)
 	print(any(F_pm_1[two_parm]))
 
 	if make_plots:
@@ -82,10 +84,12 @@ def Filter_pm_tot_DR2(rp, limit = Pair_limit['pm_tot']):
 
 def Filter_sim_px(rp, limit = Pair_limit['px']):
 	# non similar parallax
-	F_px_1 = rp['parallax']  < limit * rp['Plx'] 
-	F_px_2 = rp['pmra'].mask 
+
+	F_px_1 = rp['Plx']  < limit * rp['parallax']
+	F_px_2 = rp['pmRA_x'].mask 
+
 	if any(F_px_2) == False:
-		F_px_2 = (rp['pmra'] == 1e20)
+		F_px_2 = (rp['pmRA_x'] == 1e20)
 	F_px_1.fill_value = False
 	F_px_1=F_px_1.filled()
 	if make_plots:

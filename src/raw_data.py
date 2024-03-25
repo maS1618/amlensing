@@ -57,13 +57,13 @@ def load_raw_pairs():
 			for j,i in enumerate(raw_cands.keys().copy()):
 				if j<18:
 					raw_cands[i].description = raw_cands.meta.pop('TCOMM%i'%(j+1))
+			print('raw_cands (astropy version)',raw_cands.colnames)
 
 	# mask None values	
 	if 'roi' in raw_cands.colnames: 
 		raw_cands.remove_column("roi")
 	raw_cands = Table(raw_cands, masked = True, copy = False)
 	for i in raw_cands.colnames:
-		#print(i)
 		if i == "DR3Name" or i == "VarFlag" or i == "APF" or i =="Lib":
 			continue
 		if any(np.isnan(raw_cands[i].astype(float))): 

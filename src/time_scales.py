@@ -48,22 +48,22 @@ def timescales(tab):
         if i%500==0 : print(i)
         ra = row['ra']
         dec = row['dec']
-        pmRA_x = row['pmRA_x']
+        pmra = row['pmra']
         pmdec = row['pmdec']
         parallax = row['parallax']
         ThetaE = row['ThetaE']
         RAdeg = row['RAdeg']
         DEdeg = row['DEdeg']
         pmRA_x = row['pmRA_x'] if not np.isnan(row['pmRA_x']) else (row['ob_displacement_ra_doubled'] if not np.isnan(row['ob_displacement_ra_doubled']) else 0)
-       pmDE_x = row['pmDE_x'] if not np.isnan(row['pmDE_x	']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
-        ob_parallax = row['ob_parallax'] if not np.isnan(row['ob_parallax'])  else 4.740/75 *np.sqrt(pmRA_x*pmRA_x +pmDE_x	*pmDE_x	)
+        pmDE_x = row['pmDE_x'] if not np.isnan(row['pmDE_x	']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
+        Plx = row['Plx'] if not np.isnan(row['Plx'])  else 4.740/75 *np.sqrt(pmRA_x*pmRA_x +pmDE_x	*pmDE_x	)
         
-        pos_lens = astrometry.movePm_parallax(ra, dec, pmRA_x, pmdec, parallax, epoch_predef, 
+        pos_lens = astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, epoch_predef, 
             earthVec = pos_sun_predef)
-        pos_source = astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x, ob_parallax,
+        pos_source = astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x, Plx,
             epoch_predef, earthVec = pos_sun_predef)
-        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmRA_x, pmdec, parallax, row['TCA']-2016)
-        pos_source_max=astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x	, ob_parallax,
+        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, row['TCA']-2016)
+        pos_source_max=astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x ,pmDE_x , Plx,
             row['TCA']-2016)
         lens_ra, lens_dec = astrometry.dirVecToCelCoos(pos_lens)
         source_ra, source_dec = astrometry.dirVecToCelCoos(pos_source)
@@ -75,7 +75,7 @@ def timescales(tab):
         shift_plus = microlensing.calc_shift_plus(dist, ThetaE)
 
         shift_max = microlensing.calc_shift_plus(dist_max, ThetaE)
-        print(RAdeg,DEdeg,pmRA_x,pmDE_x	,ob_parallax)
+        print(RAdeg,DEdeg,pmRA_x,pmDE_x	,Plx)
         print(np.max(shift_plus), np.where(shift_plus == np.max(shift_plus)))
         index_max = np.where(shift_plus == np.max(shift_plus))[0][0]
 
@@ -139,7 +139,7 @@ def add_collums(ts_01,ts_05,ts_50pc,tab):
         )
     T50PC = MaskedColumn(ts_50pc, 
         dtype = 'float64',unit = 'years', 
-        description = 'Timescale over which the 2D positional shift differs by 50% from its maximum value'
+        description = 'Timescale over which the 2D positional shift differs by 50 percent from its maximum value'
             r'(\lvert$\delta_\boldsymbol{\theta}_{+,\,TCA} - $\delta_\boldsymbol{\theta}_{+,\,TCA\,-\,t_50pc}\rvert = 0.5 \delta_{\theta}'
         )
     tab.add_column(T01, name='t_0.1mas', index=38)
@@ -166,4 +166,3 @@ if __name__ == "__main__":
     for j,i in enumerate(tab.keys().copy()):
             tab.meta['TCOMM%i'%(j+1)] = tab[i].description
     tab.write(f'{infile[:-5]}.timescales.fits', format = 'fits', overwrite = True)
-
