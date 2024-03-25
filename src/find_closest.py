@@ -112,7 +112,7 @@ def estimate_Closest_parallax(row, gaia = True):
 		obj_parallax = 4.740*mu/75 
 	else:
 		obj_pmRA_x = row['pmRA_x']
-		obj_pmdec = row['pmDE_x	']
+		obj_pmdec = row['pmDE_x']
 		obj_parallax = row['Plx']
 
 
@@ -263,7 +263,7 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 
 
 	obj_pmRA_x = tab['pmRA_x'].copy()
-	obj_pmdec = tab['pmDE_x	'].copy()
+	obj_pmdec = tab['pmDE_x'].copy()
 	obj_parallax = tab["Plx"].copy()
 	# set DR2 displacement as guess if ob_pm not known 
 	if 'ob_displacement_ra_doubled' in tab.colnames:

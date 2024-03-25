@@ -34,7 +34,7 @@ def parallel(string):
 
 	#print("parallel:", *cc)
 	data = Process_data(raw_cands,result_closest)
-	print(data)
+	print('data',data)
 	# store output table temporary
 	f = open(string, 'wb')
 	pickle.dump(data, f)
@@ -46,6 +46,8 @@ def single(raw_cands):
 	print('Find closet approches')
 	tt=time.time()
 	cc = np.zeros(6)
+	#print('HERE')
+	print(np.size(raw_cands))
 	for i, row in enumerate(raw_cands):
 		if (i+1)%100 == 0 : # print progress
 			print('%i/%i: %is '%(i+1,len(raw_cands),time.time()-tt))
@@ -53,7 +55,7 @@ def single(raw_cands):
 		cc += cpt
 		result_closest.append(data)
 	result_closest = np.array(result_closest)
-	
+	print('result_closest:',result_closest)
 	output = Process_data(raw_cands,result_closest)
 	return output
 

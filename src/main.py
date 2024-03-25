@@ -6,7 +6,7 @@ import sys
 import time
 from astropy.table import vstack, Table , MaskedColumn # version >= 4.2
 
-import raw_data #is useful for fill functions n stuff, after i remove the download functionality
+import raw_data 
 import good_BGS as GB
 import mass
 import microlensing
@@ -16,7 +16,8 @@ import setup
 import plot_functions as pf
 from plot_functions import plt 
 Folder = setup.Folder
-print(Folder)
+# print('Folder')
+# print(Folder)
 
 def broadcast():
 	raw_data.broadcast()
@@ -28,6 +29,7 @@ def determine_mass(cand):
 	cand['star_type'] = cMass[2]
 	cand['mass'] = cMass[0]
 	cand['mass_error'] = cMass[1]
+	print('Good raw cands after mass check: ', len(cand))
 	return cand
 
 def determine_einstein_radii(cand):
@@ -36,6 +38,7 @@ def determine_einstein_radii(cand):
 	cand['ThetaE'] = cEinstein[0]
 	cand['ThetaE_error'] = cEinstein[1]
 	print('-------------------------')
+	print('Good raw cands after E radii calc:', len(cand))
 	return cand
 
 def approx(cand):
@@ -45,7 +48,7 @@ def approx(cand):
 	cApprox = find_closest.calc_approx_date(cand)
 	cand['approx_tca'] = cApprox[0]
 	cand['approx_dist'] = cApprox[1]
-	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmRA_x']-cand['pmRA_x'])**2 \
+	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmra']-cand['pmRA_x'])**2 \
 		+(cand['pmdec']-cand['pmDE_x'])**2)\
 		*np.sqrt(cand['ThetaE'] ** 4 /0.1**2+cand['approx_dist']*2),\
 		dtype = 'float64',unit = 'years', \
@@ -65,8 +68,8 @@ def approx(cand):
 		| (cand['approx_dist'] < 2 * cand['parallax'])]
 	cand = cand[(cand['approx_tca'] > 2010) \
 		& (cand['approx_tca'] < 2070)]
-	print('Cand:', len(cand))
 	print('-------------------------')
+	print('Good raw cands after approx_shift:', len(cand))
 	return cand
 
 def calc(cand, n_core = 4):
@@ -211,12 +214,13 @@ def main(n = setup.n_core):
 	# replace masked values
 	good_raw_cands = raw_data.fill_value(good_raw_cands) 
 
+	# Calculate Einstein Radii
 	good_raw_cands = determine_einstein_radii(good_raw_cands)
 	
-	# determine aproximated parameters
+	# Determine aproximated parameters
 	good_raw_cands = approx(good_raw_cands)
 
-	# do precise calculations 
+	# Do precise calculations 
 	table_out = calc(good_raw_cands, n)
 
 	#filter events

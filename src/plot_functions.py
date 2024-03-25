@@ -385,10 +385,10 @@ def plot_delta_pm_ax1(rp,FF):
 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
 	ax1 = plt.subplot(121)
 	plot(rp['pmRA_x'] - rp['pmRA_x'],\
-		rp['pmdec'] - rp['pmDE_x	'], color = red,  ms = 0.5,\
+		rp['pmdec'] - rp['pmDE_x'], color = red,  ms = 0.5,\
 		label = 'excluded Pairs')
 	plot(rp['pmRA_x'][FF] - rp['pmRA_x'][FF], \
-		rp['pmdec'][FF] - rp['pmDE_x	'][FF], color = blue, ms = 0.5,\
+		rp['pmdec'][FF] - rp['pmDE_x'][FF], color = blue, ms = 0.5,\
 		label = 'Pairs')
 	plt.xlabel(r"$\mu_{\alpha\star} - Sou\_\mu_{\alpha\star}$ [mas/yr]")
 	plt.ylabel(r"$\mu_{\delta} - Sou\_\mu_{\delta}$ [mas/yr]")

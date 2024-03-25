@@ -24,6 +24,7 @@ raw_cands_table = 'rawcands_new.fits'
 # If an file is given: read the corresponding file as astropy Table 
 # Has to contain Gaia eDR3 source ID's in the 'source_id' colum
 # good sources are either flaged by HPMS_good and BGS_good, respectively or all sources are asumed to be good
+
 hpms_file = 'good_HPMS.py'
 bgs_file = 'good_BGS.py'
 
@@ -53,7 +54,7 @@ Blacklist_file = 'Blacklist.csv'
 make_plots = False
 
 # save intermediate tables 
-save_table_process = False
+save_table_process = True
 
 # output format 
 form_out = ['.fits','fits'] # save data as fits table
@@ -100,13 +101,13 @@ BGS_limit = {
 	'mag': 21.5,
 	'pos_err':10}
 
-'''# limits for DR2 Match
+# limits for DR2 Match
 # used in good_BGS.py
 DR2_limit = {
 	'dist': 400, 
 	'pm_bad': 1000,
 	'mag': 0.3}
-'''
+
 # limits for criteria on HPMS-BGS Pairs 
 # used in good_Pairs.py
 Pair_limit = {

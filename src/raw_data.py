@@ -10,7 +10,6 @@ contains a boolean if the HPMS can be used (bgs_good),
 if not all bgs in the list are used
 '''
 
-
 import numpy as np
 from astropy.table import Table, MaskedColumn, Column
 
@@ -24,8 +23,6 @@ import plot_functions as pf
 import time
 import os
 tt = [0]
-
-
 
 def broadcast():
 	global hpms_file,bgs_file,raw_cands_table,\
@@ -66,7 +63,7 @@ def load_raw_pairs():
 		raw_cands.remove_column("roi")
 	raw_cands = Table(raw_cands, masked = True, copy = False)
 	for i in raw_cands.colnames:
-		print(i)
+		#print(i)
 		if i == "DR3Name" or i == "VarFlag" or i == "APF" or i =="Lib":
 			continue
 		if any(np.isnan(raw_cands[i].astype(float))): 
@@ -146,17 +143,17 @@ def check_bgs():
 		good_BGS_source_ID = GB.main()
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
-			good_raw_cands_HPMS['Source'], good_BGS_source_ID)]
+			good_raw_cands_HPMS['source_id'], good_BGS_source_ID)]
 
 		# include DR2- DR3 propermotion
-		'''DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-			for i in good_raw_cands_BGS['Source']])
-		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
-			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
-			+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
-		good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
-			MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
-			+ 'Displacemnet in DEC between DR2 and DR3.')'''
+		# DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
+		# 	for i in good_raw_cands_BGS['Source']])
+		# good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
+		# 	MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
+		# 	+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
+		# good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
+		# 	MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
+		# 	+ 'Displacemnet in DEC between DR2 and DR3.')
 
 	elif os.path.isfile(bgs_file): 
 		# load pre determined whitelist
@@ -169,23 +166,23 @@ def check_bgs():
 			good_bgs = bgs
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
-			good_raw_cands_HPMS['obj_source_id'], good_bgs['source_id'])]
-	'''else: 
+			good_raw_cands_HPMS['source_id'], good_bgs['Source'])]
+	else: 
 		#do not performe BGS filtering 
 		good_raw_cands_BGS = good_raw_cands_HPMS
 		good_BGS_source_ID, _ , pmDR2 = GB.main()
-		DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-			for i in good_raw_cands_BGS['Source']])
+		# DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
+		# 	for i in good_raw_cands_BGS['source_id']])
 
-		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
-			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
-			+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
+		# good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
+		# 	MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
+		# 	+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
 
-		good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
-			MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
-			+ 'Displacemnet in DEC between DR2 and DR3.')
-		print('No bgs file found')
-		'''
+		# good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
+		# 	MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
+		# 	+ 'Displacemnet in DEC between DR2 and DR3.')
+		# print('No bgs file found')
+		
 def check_pairs():
 	# filter pairs based on the comparison between lens and source data
 	# i.e exclude binary stars 
@@ -204,8 +201,9 @@ def check_pairs():
 		i+=1
 		if (do_filter//10**i)%10:
 			good_ff = ff(good_raw_cands_BGS)
-			print(ff.__name__, np.sum(good_ff), np.sum(good_ff==False), 
-				len(good_ff))
+			print( 'ff.__name__ :' ,ff.__name__, '\n', 'np.sum(good_ff) :' , np.sum(good_ff),'\n','np.sum(good_ff==False) :' , np.sum(good_ff==False),'\n', 
+				'len(good_ff) :' ,len(good_ff))
+			print('-------------------------')
 			goodfilter.append([ff.__name__, good_ff])
 			good= good & good_ff
 		else:
@@ -214,6 +212,7 @@ def check_pairs():
 	# save  good raw_cands table to disk
 	if save_table_process:
 		print('save good rawcands')
+		print('good_raw_cands:' , len(good_raw_cands))
 		print(Folder + 'Results/rawcands.good' + prefix+ form_out[0])
 		good_raw_cands.write(Folder + 'Results/rawcands.good' + prefix+ form_out[0], \
 			format = form_out[1], overwrite = True)
@@ -226,7 +225,7 @@ def check_pairs():
 			format = form_out[1], overwrite = True)
 
 def main(redo = 0):
-	# initialate loading the raw_cands table and going throug the different
+	# initialate loading the raw_cands table and going through the different
 	# filter types
 	# returns good raw candidates
 
@@ -255,7 +254,7 @@ def main(redo = 0):
 
 	if make_plots:
 		bgs_good = GB.BGS[np.isin(
-			GB.BGS['source_id'], good_raw_cands["Source"])]
+			GB.BGS['Source'], good_raw_cands["source_id"])]
 		pf.plot_psi_part2(bgs_good)
 
 		pf.plot_pos_err(data=bgs_good)
@@ -265,9 +264,8 @@ def main(redo = 0):
 		pf.plot_HPMS_part2(good_raw_cands)
 
 	print('-------------------------')
-	print('Good raw cands', len(good_raw_cands) )
+	print('Good raw cands (from raw_data): ', len(good_raw_cands) )
 	print('-------------------------')
-
 	return good_raw_cands
 
 if __name__ == '__main__': 

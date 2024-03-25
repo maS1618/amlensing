@@ -9,7 +9,7 @@ from setup import prefix, Folder, HPMS_DR3_file, HPMS_limit, save_table_process,
 import plot_functions as pf
 
 def broadcast():
-	global prefix, Folder, HPMS_eDR3_file, HPMS_limit, save_table_process, make_plots, form_out
+	global prefix, Folder, HPMS_DR3_file, HPMS_limit, save_table_process, make_plots, form_out
 	from setup import prefix, Folder, HPMS_DR3_file, HPMS_limit, save_table_process, make_plots, form_out
 
 def load_Data():
@@ -52,7 +52,7 @@ def HPMS_check_ruwe(limit = HPMS_limit['ruwe']):
 	out = HPMS['ruwe'] < limit
 	print('HPMS Ruwe:', np.sum(out), '/', len(out))
 	if make_plots:
-		pf.plot_ruwe(HPMS,out)
+		pf.plot_ruwe(HPMS, out)
 	return out
 
 def HPMS_n_obs_sig_g_flux(power = HPMS_limit['n_obs_sig_g_flux_power'],\
@@ -62,8 +62,8 @@ def HPMS_n_obs_sig_g_flux(power = HPMS_limit['n_obs_sig_g_flux_power'],\
 	b =  np.power(HPMS['phot_g_n_obs'].data *1e0, power)
 	out =a*b> limit 
 	print('HPMS NvsF:', np.sum(out), '/', len(out))
-	# if make_plots:
-	# 	pf.plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit)
+	if make_plots:
+		pf.plot_sig_flux(HPMS, out,power,limit)
 	return out
 
 def HPMS_check_phot(cat = None,limit = HPMS_limit['mag']):
@@ -95,21 +95,26 @@ def main():
 	if 'HPMS' not in globals():
 		load_Data() #this is loading data from the dr3 HPMS file
 	tt.append(time.time())
-	'''if 'GCNS_cat' not in globals():
-		load_GCNS()
-	tt.append(time.time())
-	if 'index_GCNS_cat' not in globals():
-		match_GCNS()
-	tt.append(time.time())'''
+
+	# if 'GCNS_cat' not in globals():
+	# 	load_GCNS()
+	# tt.append(time.time())
+	# if 'index_GCNS_cat' not in globals():
+	# 	match_GCNS()
+	#tt.append(time.time())
+
 	px = HPMS_check_parallax()
 	rw = HPMS_check_ruwe()
-	'''ns_good = HPMS_check_GCNS()
-	ns_bad = HPMS_check_GCNS_bad()'''
+
+	# ns_good = HPMS_check_GCNS()
+	# ns_bad = HPMS_check_GCNS_bad()
+
 	phot = HPMS_check_phot()
 	NvsF = HPMS_n_obs_sig_g_flux()
 	good = (px & rw) & phot & NvsF
 	print('HPMS good:', np.sum(good), '/', len(HPMS))
 	tt.append(time.time())
+	
 	if save_table_process:
 		print('save good HPMS')
 		print(Folder + 'Results/HPMS.good' + prefix +form_out[0])
@@ -120,7 +125,7 @@ def main():
 		HPMS_bad["out_ruwe"]= Column(rw[good==False] == False)
 		HPMS_bad["out_phot"]= Column(phot[good==False] == False)
 		HPMS_bad["out_N_vs_SigFlux"]= Column(NvsF[good==False] == False)
-		'''HPMS_bad["out_ns_bad"]= Column(ns_bad[good==False])'''
+		# HPMS_bad["out_ns_bad"]= Column(ns_bad[good==False])
 		HPMS_bad.write(Folder + 'Results/HPMS.bad' \
 			+ prefix + form_out[0], format = form_out[1], overwrite = True)
 	tt.append(time.time())
