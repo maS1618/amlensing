@@ -76,7 +76,7 @@ def approx(cand):
 	print('Good raw cands after approx_shift:', len(cand))
 	return cand
 
-def calc(cand, n_core = 8):
+def calc(cand, n_core = 4):
 	# split on multiple cores
 	if n_core > len(cand): n_core = len(cand)
 	if n_core > 1: 

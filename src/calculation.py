@@ -55,7 +55,7 @@ def single(raw_cands):
 		cc += cpt
 		result_closest.append(data)
 	result_closest = np.array(result_closest)
-	print('result_closest:',result_closest)
+	# print('result_closest:',result_closest)
 	output = Process_data(raw_cands,result_closest)
 	return output
 
