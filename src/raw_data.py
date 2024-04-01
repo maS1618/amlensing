@@ -171,17 +171,17 @@ def check_bgs():
 		#do not performe BGS filtering 
 		good_raw_cands_BGS = good_raw_cands_HPMS
 		good_BGS_source_ID, _ , pmDR2 = GB.main()
-		# DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-		# 	for i in good_raw_cands_BGS['source_id']])
+		DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
+			for i in good_raw_cands_BGS['source_id']])
 
-		# good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
-		# 	MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
-		# 	+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
+		good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
+			MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
+			+ 'Displacemnet in RA between DR2 and DR3. (cos(DEC) applied)')
 
-		# good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
-		# 	MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
-		# 	+ 'Displacemnet in DEC between DR2 and DR3.')
-		# print('No bgs file found')
+		good_raw_cands_BGS['ob_displacement_dec_doubled'] = \
+			MaskedColumn(DR2_pm[:,1], unit = 'mas', description = 'Doubled ' \
+			+ 'Displacemnet in DEC between DR2 and DR3.')
+		print('No bgs file found')
 		
 def check_pairs():
 	# filter pairs based on the comparison between lens and source data
