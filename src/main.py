@@ -113,7 +113,7 @@ def calc(cand, n_core = 4):
 
 	else:
 		#single computing 
-		#(see calculation.py, forwars to microlensing.py and find_closest.py)
+		#(see calculation.py, forwards to microlensing.py and find_closest.py)
 		table_out = calculation.single(cand)
 	print('-------------------------')
 	return(table_out)
@@ -124,8 +124,6 @@ def filter_events(table_out):
 	form_out = setup.form_out
 
 	if setup.save_table_process: # save step to file
-		
-
 		print('save unfiltered results')
 		# save all events
 		print(Folder + 'Results/amlensing.unfiltered'+ prefix + form_out[0])

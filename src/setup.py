@@ -51,7 +51,7 @@ dr3_random_file = 'dr3_random.fits'
 Blacklist_file = 'Blacklist.csv'
 
 # create plots on the fly
-make_plots = False
+make_plots = True
 
 # save intermediate tables 
 save_table_process = True
