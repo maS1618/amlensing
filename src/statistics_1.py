@@ -3,8 +3,6 @@ This script creats a table which sums up the number of events for certain criter
 
 '''
 
-
-
 from  astropy.table import Table, unique, vstack,hstack, join
 import numpy as np
 import sys
@@ -24,7 +22,6 @@ if len(sys.argv)>1:
 from setup import Folder
 print(Folder)
 
-
 if sus:
 	dr3_file = Folder+ "Results/amlensing.sus.fits"
 	file=Folder + 'Results/amlensing.statistics.sus.txt'
@@ -34,10 +31,9 @@ else:
 
 results = Table.read(dr3_file, format = "fits")
 
-
 # category 
 all_results = np.ones(len(results), dtype = bool)
-hpms = results['pmRA_x']**2+results['pmdec']**2>150**2
+hpms = results['pmra']**2+results['pmdec']**2>150**2
 g18 = results["Gmag"]<18
 WD = abs(results["mass"]- 0.65)< 1e-6
 lowmass = results["mass"] < 0.65 - 1e-6
@@ -56,7 +52,7 @@ shift1lum = results['shift_lum']>1
 shift05 = results['shift_plus']>0.5
 shift05lum = results['shift_lum']>0.5
 shift01lum = results['shift_lum']>0.1
-nextdecade = (results['TCA']<2031) & (results['TCA']>2021)
+nextdecade = (results['TCA']<2017) & (results['TCA']>2006)
 mag01 = results['magnification']>0.001
 mag10 = results['magnification']>0.01
 mag100 = results['magnification']>0.1
@@ -94,7 +90,6 @@ for cat in cathegories.keys():
 	n_l01 = [np.sum(shift01lum&current&dg) for dg in [all_results,deltaG3,deltaG6]]
 	n_l01_nextdecade = [np.sum(nextdecade&shift01lum&current&dg) for dg in [all_results,deltaG3,deltaG6]]
 
-
 	n_mag = [np.sum(mag01&current&dg) for dg in [all_results,deltaG3,deltaG6]]
 	n_mag_nextdecade = [np.sum(nextdecade&mag01&current&dg) for dg in [all_results,deltaG3,deltaG6]]
 	n_mag10 = [np.sum(mag10&current&dg) for dg in [all_results,deltaG3,deltaG6]]
@@ -130,7 +125,3 @@ for cat in cathegories.keys():
 	file_output.write("--next decade:    %i (%i, %i)\n"%tuple(n_mag100_nextdecade))
 
 	file_output.write("----------------------------------------------------\n")
-
-
-
-

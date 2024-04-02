@@ -11,7 +11,7 @@ warnings.simplefilter("ignore")
 
 #------------------------------------------------------------------------------
 #Default values and files 
-n_core = 1
+n_core = 4
 prefix = ''
 do_filter = 1
 # Files have to be located in Data or given as relative path from current working directory.
@@ -81,7 +81,7 @@ mask_values = {'phot_rp_mean_mag': 0,
 		'BPmag': 0}
 
 # Gaia reference epoch
-Gaia_epoch = 2016.
+Gaia_epoch = 2000.
 
 #------------------------------------------------------------------------------
 # limits for criteria on High Proper Motion Stars 
@@ -103,10 +103,10 @@ BGS_limit = {
 
 # limits for DR2 Match
 # used in good_BGS.py
-DR2_limit = {
-	'dist': 400, 
-	'pm_bad': 1000,
-	'mag': 0.3}
+# DR2_limit = {
+# 	'dist': 400, 
+# 	'pm_bad': 1000,
+# 	'mag': 0.3}
 
 # limits for criteria on HPMS-BGS Pairs 
 # used in good_Pairs.py
