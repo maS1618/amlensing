@@ -70,8 +70,8 @@ def approx(cand):
 	# filter n approximated effect
 	cand = cand[(approx_shift > 0.03) \
 		| (cand['approx_dist'] < 2 * cand['parallax'])]
-	cand = cand[(cand['approx_tca'] > 2010) \
-		& (cand['approx_tca'] < 2070)]
+	cand = cand[(cand['approx_tca'] > 1995) \
+		& (cand['approx_tca'] < 2055)]
 	print('-------------------------')
 	print('Good raw cands after approx_shift:', len(cand))
 	return cand

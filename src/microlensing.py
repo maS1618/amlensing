@@ -332,11 +332,11 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 				'Error of the shift of the center of light' + suffix_descr)
 			shift_error_p = MaskedColumn(shift_error_p, dtype = 'float64', \
 				unit = 'mas', description = \
-				'Positiv error of the shift of the center of light' \
+				'Positive error of the shift of the center of light' \
 				+ suffix_descr)
 			shift_error_m = MaskedColumn(shift_error_m, dtype = 'float64', \
 				unit = 'mas', description = \
-				'Negativ error of the shift of the center of light' \
+				'Negative error of the shift of the center of light' \
 				+ suffix_descr)
 			
 			shift_plus = MaskedColumn(shift_plus, dtype = 'float64',\
@@ -347,10 +347,10 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 				'Error of the shift of the major image (+)' + suffix_descr)
 			shift_plus_error_p = MaskedColumn(shift_plus_error_p, 
 				dtype='float64', unit = 'mas', description = \
-				'Positiv error of the shift of image (+)' + suffix_descr)
+				'Positive error of the shift of image (+)' + suffix_descr)
 			shift_plus_error_m = MaskedColumn(shift_plus_error_m,\
 				dtype='float64', unit = 'mas', description = \
-				'Negativ error of the shift of the major image (+)' \
+				'Negative error of the shift of the major image (+)' \
 				+ suffix_descr)
 			
 			shift_lum = MaskedColumn(shift_lum, dtype='float64', unit = 'mas',\
@@ -363,11 +363,11 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 				+ suffix_descr)
 			shift_lum_error_p = MaskedColumn(shift_lum_error_p, \
 				dtype = 'float64',unit = 'mas', description = \
-				'Positiv error of the shift includig luminous-lens effect'\
+				'Positive error of the shift includig luminous-lens effect'\
 				+ suffix_descr)
 			shift_lum_error_m = MaskedColumn(shift_lum_error_m,\
 				dtype = 'float64', unit = 'mas', description = \
-				'Negativ error of the shift includig luminous-lens effect' \
+				'Negative error of the shift includig luminous-lens effect' \
 				+ suffix_descr)
 
 			magnification = MaskedColumn(magnification, dtype = 'float64',\
@@ -378,11 +378,11 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 				'Error of the magnification in magnitudes' + suffix_descr)
 			magnification_error_p = MaskedColumn(magnification_error_p, 
 				dtype = 'float64', unit = 'mag', description = \
-				'Positiv error of the magnification in magnitudes' + \
+				'Positive error of the magnification in magnitudes' + \
 				suffix_descr)
 			magnification_error_m = MaskedColumn(magnification_error_m, 
 				dtype = 'float64', unit = 'mag', description = \
-				'Negativ error of the magnification in magnitudes' + \
+				'Negative error of the magnification in magnitudes' + \
 				suffix_descr)
 			return u, u_error,u_error_p,u_error_m, shift, shift_error, \
 				shift_error_p, shift_error_m, shift_plus, shift_plus_error, \
@@ -444,6 +444,3 @@ def calculate_Effect(tab, approx = False, gaia = False, \
 			return u, u_error, shift, shift_error, shift_plus, \
 				shift_plus_error, shift_lum, shift_lum_error, magnification, \
 				magnification_error
-
-
-

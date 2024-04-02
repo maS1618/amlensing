@@ -192,7 +192,7 @@ def estimate_Closest_parallax(row, gaia = True):
 
 	else:
 		"""
-		calculate closest approxhes seen from L2 therefore the parallax is
+		calculate closest approches seen from L2 therefore the parallax is
 		 multiplied with 1.01
 		"""		
 
@@ -248,6 +248,10 @@ def estimate_Closest_parallax(row, gaia = True):
 		tt.append(time.time())
 		tt = np.array(tt)
 		cpt = tt[1:] - tt[:-1]
+		# print('cpt: ', cpt)
+		# print('tt55: ', tt55)
+		# print('a: ',a)
+		# print('a2: ', a2)
 		cpt = np.append(cpt, (tt55-tt44) / (len(a)+len(a2)))
 		# print('closest_date_vec', closest_date_vec)
 		# print('closest_dist_vec', closest_dist_vec)
