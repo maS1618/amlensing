@@ -83,9 +83,6 @@ def plot(x,y,fmt="o", ms = 2, color = [0., 0.25882353, 0.58039216, 1.],\
 	return out
 
 
-
-
-
 # Plot functions used in  good_BGS.py 
 
 def plot_gof(BGS,out, limit):
@@ -98,7 +95,7 @@ def plot_gof(BGS,out, limit):
 	loglog(BGS['NgAL'][out],\
 		BGS['gofAL'][out],color = blue, ms = 0.5, \
 		label = "Sou_GoF/sqrt(Sou_N) < %.2f"%f(limit))
-	good_ruwe = BGS['ruwe'] < limit
+	good_ruwe = BGS['RUWE_ob'] < limit
 	loglog(BGS['NgAL'][good_ruwe],\
 		BGS['gofAL'][good_ruwe],color = green, \
 		ms = 0.5,  label = "RUWE < %.1f"%limit)		
@@ -108,8 +105,8 @@ def plot_gof(BGS,out, limit):
 	# plt.xlim(xlim)
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	plt.ylabel('Sou_GoF')
 	plt.xlabel('Sou_N')
 	if ion: plt.pause(0.1)
@@ -117,8 +114,8 @@ def plot_gof(BGS,out, limit):
 def plot_px(BGS,out):
 	fig = plt.figure("px")
 	fig.clf()
-	_,b,_ = plt.hist(BGS['parallax'], color= red, bins = 1000,rwidth = 0.8)
-	plt.hist(BGS[out]['parallax'],  color= blue, bins = b, rwidth = 0.5)
+	_,b,_ = plt.hist(BGS['Plx'], color= red, bins = 1000,rwidth = 0.8)
+	plt.hist(BGS[out]['Plx'],  color= blue, bins = b, rwidth = 0.5)
 	#plt.yscale("log")
 	plt.xlim([-5,5])
 	plt.ylabel('#')
@@ -129,19 +126,19 @@ def plot_psi(BGS,psi,out,random_sample = None):
 	fig = plt.figure("psi")
 	fig.clf()
 
-	semilogy(BGS['phot_g_mean_mag'][out], psi[out],\
+	semilogy(BGS['Gmag'][out], psi[out],\
 		color = blue,ms = 0.5,zorder = 1, label = "All BGS")
-	semilogy(BGS['phot_g_mean_mag'][out == False], psi[out == False], \
+	semilogy(BGS['Gmag'][out == False], psi[out == False], \
 		color = red, ms = 0.5, label = r"$\Psi > 1$ & G < 18 mag", \
 		zorder = 0)
 	if random_sample is not None:
 		rgamma = np.maximum(pow(10, \
 			0.2 * (random_sample['phot_g_mean_mag'] - 18)), 1)
-		rpsi = random_sample['amax'] / (1.2 * rgamma)
+		rpsi = random_sample['astrometric_sigma5d_max'] / (1.2 * rgamma)
 		semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 			color = grey, ms = 0.05,  zorder = 3, \
 			label = "random sample")
-		c = np.arange(5.5,22,0.1)
+		c = np.arange(9.5,21,0.1)
 		d = np.array([np.percentile(
 			rpsi[np.abs(random_sample['phot_g_mean_mag']-i) < 1],90) 
 			for i in c])
@@ -153,8 +150,8 @@ def plot_psi(BGS,psi,out,random_sample = None):
 
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	if ion: plt.pause(0.1)
 
 def plot_psi_result_part_1(random_sample):
@@ -162,12 +159,13 @@ def plot_psi_result_part_1(random_sample):
 	fig.clf()
 	rgamma = np.maximum(
 		pow(10, 0.2 * (random_sample['phot_g_mean_mag'] - 18)), 1)
-	rpsi = random_sample['amax'] / (1.2 * rgamma)
+	rpsi = random_sample['astrometric_sigma5d_max'] / (1.2 * rgamma)
+	print('rpsi: ' ,rpsi)
 	semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 		color = grey, ms = 0.05,  zorder = 0, label = "random sample")
-	c = np.arange(5.5,22,0.1)
-	d = np.array([np.percentile(
-		rpsi[np.abs(random_sample['phot_g_mean_mag']-i) < 1],90) 
+	c = np.arange(9.5,21,0.1)
+	# print('rand_sample <1: ', random_sample['phot_g_mean_mag'] < 1)
+	d = np.array([np.percentile(rpsi[np.abs(random_sample['phot_g_mean_mag']-i) < 1],90) 
 		for i in c])
 	plt.plot(c,d, color = limitcolor, label = "90th percentile", zorder = 100)
 	plt.ylim([10**-3,10**8])
@@ -198,8 +196,8 @@ def plot_psi_result_part_1(random_sample):
 	plt.ylim([1e-4,30])
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		lh.set_markersize(5)
 	plt.xlabel("$\Delta\phi$ [mas]")
 	plt.ylabel("$\Delta G$ [mag]")
 	if ion: plt.pause(0.1)
@@ -220,9 +218,9 @@ def plot_DR2_pm(d3,dr2,pp):
 	fivedr2	= twodr2==False
 
 
-	plot(d3[five & twodr2]["pmRA_x"], pp[five & twodr2][:,0], \
+	plot(d3[five & twodr2]["pmRA_ob"], pp[five & twodr2][:,0], \
 		color = blue, label = "2par in dr2")
-	plot(d3[fivedr2]["pmRA_x"], pp[fivedr2][:,0], color = green,\
+	plot(d3[fivedr2]["pmRA_ob"], pp[fivedr2][:,0], color = green,\
 		label = "5par in dr2")
 
 	ax2 = plt.subplot(122)
@@ -244,8 +242,8 @@ def plot_DR2_pm(d3,dr2,pp):
 
 	leg = ax1.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		lh.set_markersize(5)
 	if ion: plt.pause(0.1)'''
 
 def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None): 
@@ -253,15 +251,15 @@ def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None):
 	if BGS is not None:
 		fig.clf()
 		ax = plt.axes()
-		semilogy(BGS['phot_g_mean_mag'][F_pos==False], \
-			np.sqrt(BGS['ra_error'][F_pos==False] \
-			* BGS['ra_error'][F_pos==False] \
-			+ BGS['dec_error'][F_pos==False] \
-			* BGS['dec_error'][F_pos==False]), ms = 0.5, color = red, \
+		semilogy(BGS['Gmag'][F_pos==False], \
+			np.sqrt(BGS['e_RAdeg'][F_pos==False] \
+			* BGS['e_RAdeg'][F_pos==False] \
+			+ BGS['e_DEdeg'][F_pos==False] \
+			* BGS['e_DEdeg'][F_pos==False]), ms = 0.5, color = red, \
 			label = "excluded BGS" )
-		semilogy(BGS['phot_g_mean_mag'][F_pos], \
-			np.sqrt(BGS['ra_error'][F_pos] * BGS['ra_error'][F_pos] + \
-			BGS['dec_error'][F_pos] * BGS['dec_error'][F_pos]), ms = 0.5, \
+		semilogy(BGS['Gmag'][F_pos], \
+			np.sqrt(BGS['e_RAdeg'][F_pos] * BGS['e_RAdeg'][F_pos] + \
+			BGS['e_DEdeg'][F_pos] * BGS['e_DEdeg'][F_pos]), ms = 0.5, \
 			color = blue, label = \
 			r"$\sqrt{\sigma^{2}_{\alpha} + \sigma^{2}_{\delta}} < $" \
 			+ "%i mas"%limit)
@@ -271,8 +269,8 @@ def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None):
 		# plt.xlim(xlim)
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
-			lh._legmarker.set_alpha(1)
-			lh._legmarker.set_markersize(5)
+			lh.set_alpha(1)
+			# lh.set_markersize(5)
 		plt.xlabel("G [mag]")
 		plt.ylabel(r"$\sqrt{\sigma_{\alpha}^{2} + \sigma_{\delta}^{2}}$ [mas]")
 		ax.yaxis.set_major_formatter(formatter)
@@ -288,8 +286,8 @@ def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None):
 		ax.xaxis.set_minor_locator(minor_locator)
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
-			lh._legmarker.set_alpha(1)
-			lh._legmarker.set_markersize(5)
+			lh.set_alpha(1)
+			# lh.set_markersize(5)
 	if ion: plt.pause(0.1)
 
 # Plot functions used in  good_HPMS.py 
@@ -298,7 +296,7 @@ def plot_HPMS(HPMS,good):
 	fig = plt.figure("HPMS")
 	phot = HPMS['phot_g_mean_mag']<21
 	fig.clf()
-	pmtot = np.sqrt(HPMS['pmRA_x'] * HPMS['pmRA_x'] + HPMS['pmdec']*HPMS['pmdec'])
+	pmtot = np.sqrt(HPMS['pmra'] * HPMS['pmra'] + HPMS['pmdec']*HPMS['pmdec'])
 	plt.loglog(pmtot[phot&(good==False)],\
 	 	HPMS[phot&(good==False)]['parallax'],'o', color =red, ms = 0.5, 
 	 	label = 'excluded high-proper-motion-stars')
@@ -309,8 +307,8 @@ def plot_HPMS(HPMS,good):
 	plt.ylabel(r"$\varpi$ [mas]")
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	if ion: plt.pause(0.1)
 
 def plot_ruwe(HPMS,out):
@@ -331,17 +329,17 @@ def plot_ruwe(HPMS,out):
 	plt.xlabel("G [mag]")
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	ax.yaxis.set_major_formatter(formatter)
 	if ion: plt.pause(0.1)
 
-def plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit):	
+def plot_sig_flux(HPMS,out,power,limit):	
 	fig = plt.figure("n_vs_sig_g_flux")
 	fig.clf()
 	ax = plt.axes()
 	f2 = out == False
-	phot2 = HPMS_in_GCNS_reject_bad['phot_g_mean_mag']<21
+	# phot2 = HPMS_in_GCNS_reject_bad['phot_g_mean_mag']<21
 	phot = HPMS['phot_g_mean_mag']<21
 	loglog(HPMS[f2&phot]['phot_g_n_obs'],\
 		HPMS[f2&phot]['phot_g_mean_flux_over_error'], color =red, \
@@ -349,9 +347,9 @@ def plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit):
 	loglog(HPMS[out&phot]['phot_g_n_obs'], \
 		HPMS[out&phot]['phot_g_mean_flux_over_error'], color =blue,\
 		ms = 0.5, label = "high-proper-motion-stars")
-	plt.loglog(HPMS_in_GCNS_reject_bad[phot2]['phot_g_n_obs'], \
-		HPMS_in_GCNS_reject_bad[phot2]['phot_g_mean_flux_over_error'], "s", \
-		color ="k" , ms = 2, label = "GCNS probability < 0.38")
+	# plt.loglog(HPMS_in_GCNS_reject_bad[phot2]['phot_g_n_obs'], \
+	# 	HPMS_in_GCNS_reject_bad[phot2]['phot_g_mean_flux_over_error'], "s", \
+	# 	color ="k" , ms = 2, label = "GCNS probability < 0.38")
 	plt.ylabel(r"$G_{flux}/\sigma_{G_{flux}}$")
 	plt.xlabel(r"$n_{obs}$")
 	xlim = plt.xlim()
@@ -371,8 +369,8 @@ def plot_sig_flux(HPMS,HPMS_in_GCNS_reject_bad,out,power,limit):
 		label = r"$G_{flux}/\sigma_{G_{flux}}\cdot n_{obs}^{%s} < %s$"%(s1,s2)) 
 	leg = plt.legend()
 	for lh in leg.legendHandles:  
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	ax.xaxis.set_major_formatter(formatter)
 	ax.yaxis.set_major_formatter(formatter)
 	if ion: plt.pause(0.1)
@@ -384,11 +382,12 @@ def plot_delta_pm_ax1(rp,FF):
 	fig.clf()
 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
 	ax1 = plt.subplot(121)
-	plot(rp['pmRA_x'] - rp['pmRA_x'],\
-		rp['pmdec'] - rp['pmDE_x'], color = red,  ms = 0.5,\
+
+	plot(rp['pmra'] - rp['pmRA_ob'],\
+		rp['pmdec'] - rp['pmDE'], color = red,  ms = 0.5,\
 		label = 'excluded Pairs')
-	plot(rp['pmRA_x'][FF] - rp['pmRA_x'][FF], \
-		rp['pmdec'][FF] - rp['pmDE_x'][FF], color = blue, ms = 0.5,\
+	plot(rp['pmra'][FF] - rp['pmRA_ob'][FF], \
+		rp['pmdec'][FF] - rp['pmDE'][FF], color = blue, ms = 0.5,\
 		label = 'Pairs')
 	plt.xlabel(r"$\mu_{\alpha\star} - Sou\_\mu_{\alpha\star}$ [mas/yr]")
 	plt.ylabel(r"$\mu_{\delta} - Sou\_\mu_{\delta}$ [mas/yr]")
@@ -396,20 +395,20 @@ def plot_delta_pm_ax1(rp,FF):
 	plt.ylim([-500,500])
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)	
+		lh.set_alpha(1)
+		# lh.set_markersize(5)	
 	if ion: plt.pause(0.1)
 
 def  plot_delta_pm_ax2(rp,F_pm_3,FF):
 	fig = plt.figure("delta_pm", figsize = [6.4,3])
 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
 	ax2 = plt.subplot(122)
-	plot(rp[F_pm_3]['pmRA_x'] \
+	plot(rp[F_pm_3]['pmra'] \
 		- rp[F_pm_3]['ob_displacement_ra_doubled'],\
 		rp[F_pm_3]['pmdec'] \
 		- rp[F_pm_3]['ob_displacement_dec_doubled'],\
 		color = red,  ms = 0.5)
-	plot(rp['pmRA_x'][FF] - rp['ob_displacement_ra_doubled'][FF], \
+	plot(rp['pmra'][FF] - rp['ob_displacement_ra_doubled'][FF], \
 		rp['pmdec'][FF] - rp['ob_displacement_dec_doubled'][FF], \
 		color = blue, ms = 0.5)
 	plt.xlabel(r'$\mu_{\alpha^{\star}} - \Delta \phi_{\rm \times2,\,\alpha^{\star}}/1{\rm yr}$ [mas/yr]')
@@ -434,8 +433,8 @@ def plot_sim_px(rp= None,F_px_1=None, data = None):
 			data['Plx'],  color = yellow, label='Good Candidates')
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
-			lh._legmarker.set_alpha(1)
-			lh._legmarker.set_markersize(5)
+			lh.set_alpha(1)
+			# lh.set_markersize(5)
 		plt.ylim([-10,20])
 		ax = plt.gca()
 		minor_locator = AutoMinorLocator(5)
@@ -458,8 +457,8 @@ def plot_psi_part2(data):
 	ax.xaxis.set_minor_locator(minor_locator)
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	if ion: plt.pause(0.01)
 
 def plot_sim_px_part2(data):
@@ -468,8 +467,8 @@ def plot_sim_px_part2(data):
 		data['Plx'],  color = yellow)
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	plt.ylim([-10,20])
 	ax = plt.gca()
 	minor_locator = AutoMinorLocator(5)
@@ -481,15 +480,15 @@ def plot_HPMS_part2(data):
 	cc = data['Plx']>0
 	xlim = plt.xlim()
 	ylim = plt.ylim()
-	loglog(np.sqrt(data[cc]['pmRA_x']**2+data[cc]['pmDE_x	']**2),
+	loglog(np.sqrt(data[cc]['pmRA_ob']**2+data[cc]['pmDE']**2),
 		data[cc]['Plx'],color = green, ms = 0.5, 
 		label = 'background stars')
 	plt.xlim([1,xlim[1]])
 	plt.ylim([0.1,ylim[1]])
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
-		lh._legmarker.set_alpha(1)
-		lh._legmarker.set_markersize(5)
+		lh.set_alpha(1)
+		# lh.set_markersize(5)
 	if ion: plt.pause(0.01)
 
 
@@ -520,8 +519,8 @@ def plot_CMD(tab = None, g_rp= None,B_abs=None,WD_Terms=None,RG_Terms=None):
 
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
-			lh._legmarker.set_alpha(1)
-			lh._legmarker.set_markersize(5)
+			lh.set_alpha(1)
+			# lh.set_markersize(5)
 	if ion: plt.pause(0.01)
 
 
@@ -531,21 +530,21 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 	if 'psi_result' in plt.get_figlabels():
 		plt.figure('psi_result')
 
-		bl = np.isin(BGS['source_id'],\
-			result[blacklist]['Source'])
-		bl2= bl & (BGS['dec'] < -30)
+		bl = np.isin(BGS['SolID'],\
+			result[blacklist]['source_id'])
+		bl2= bl & (BGS['DEdeg'] < -30)
 
-		res = np.isin(BGS['source_id'],result[filtered]['Source'])
-		g = BGS['phot_g_mean_mag'][res]
-		g_BL = BGS['phot_g_mean_mag'][bl]
-		g_BL2 = BGS['phot_g_mean_mag'][bl2]
+		res = np.isin(BGS['SolID'],result[filtered]['SolID'])
+		g = BGS['Gmag'][res]
+		g_BL = BGS['Gmag'][bl]
+		g_BL2 = BGS['Gmag'][bl2]
 
 		if 'psi' in BGS.colnames:				
-			psi = BGS['psi'][res]
-			psi_BL = BGS['psi'][bl]
-			psi_BL2 = BGS['psi'][bl2]
+			psi = BGS['epsi'][res]
+			psi_BL = BGS['epsi'][bl]
+			psi_BL2 = BGS['epsi'][bl2]
 		else:
-			gamma = np.maximum(pow(10, 0.2 * (BGS['phot_g_mean_mag'] - 18)), 1)
+			gamma = np.maximum(pow(10, 0.2 * (BGS['Gmag'] - 18)), 1)
 			psi_bgs = BGS['amax'] / (1.2 * gamma)
 			psi = psi_bgs[res]
 			psi_BL = psi_bgs[bl]
@@ -566,8 +565,8 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
-			lh._legmarker.set_alpha(1)
-			lh._legmarker.set_markersize(5)
+			lh.set_alpha(1)
+			# lh.set_markersize(5)
 	else: print('No plot found for "psi_result"')
 
 
@@ -622,8 +621,8 @@ def plot_results(result):
 				leg = plt.legend()
 				for lh in leg.legendHandles: 
 					try: 
-						lh._legmarker.set_alpha(1)
-						lh._legmarker.set_markersize(5)
+						lh.set_alpha(1)
+						# lh.set_markersize(5)
 					except: pass
 				plt.ylabel(r'$\delta\theta_{+}$ [mas]')
 				plt.xlabel(r'$T_{CA}$ [yr]')
@@ -699,8 +698,8 @@ def plot_results(result):
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
 			try: 
-				lh._legmarker.set_alpha(1)
-				lh._legmarker.set_markersize(5)
+				lh.set_alpha(1)
+				# lh.set_markersize(5)
 			except: pass
 		plt.ylabel(r'$\Delta m$ [mag]')
 		plt.xlabel(r'$T_{CA}$ [yr]')

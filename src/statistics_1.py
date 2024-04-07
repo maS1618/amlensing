@@ -20,7 +20,7 @@ if len(sys.argv)>1:
 		sus = 1
 
 from setup import Folder
-print(Folder)
+# print(Folder)
 
 if sus:
 	dr3_file = Folder+ "Results/amlensing.sus.fits"

@@ -48,8 +48,8 @@ def calc_approx_date(tab):
 	delta_ra = (tab['RAdeg'] - tab['ra']) * cd * 3.6e6
 	delta_dec = (tab['DEdeg'] - tab['dec']) * 3.6e6
 
-	obj_pmra = tab['pmRA_x'].copy()
-	obj_pmdec = tab['pmDE_x'].copy()
+	obj_pmra = tab['pmRA_ob'].copy()
+	obj_pmdec = tab['pmDE'].copy()
 
 	# set DR2 displacement as guess if ob_pm not known 
 	# if 'ob_displacement_ra_doubled' in tab.colnames:
@@ -76,8 +76,8 @@ def estimate_Closest_parallax(row, gaia = True):
 	units: 
 	Ra,DEC in Deg
 	ra_err, Dec_err in mas
-	pmRA_x, pmDec in mas/year, 
-	pmRA_x_err,pmDec_err in mas/year 
+	pmRA_ob, pmDec in mas/year, 
+	pmRA_ob_err,pmDec_err in mas/year 
 	parrallax in mas
 	parrallax_err in mas
 
@@ -104,8 +104,8 @@ def estimate_Closest_parallax(row, gaia = True):
 	obj_ra = row['RAdeg']
 	obj_dec = row['DEdeg']
 
-	obj_pmra = row['pmRA_x']
-	obj_pmdec = row['pmDE_x']
+	obj_pmra = row['pmRA_ob']
+	obj_pmdec = row['pmDE']
 	obj_parallax = row['Plx']
 
 	# set DR2 displacement as guess if ob_pm not known 
@@ -140,13 +140,20 @@ def estimate_Closest_parallax(row, gaia = True):
 	tlim = max(2.0, (3 * lens_parallax) / Mu_tot)
 	t_min = t_0 - tlim - Gaia_epoch
 	t_max = t_0 + tlim - Gaia_epoch
-	
+	# print('t0: ', t_0)
+	# print('tlim: ', tlim)
+	# print('tmin: ', t_min)
+	# print('tmax: ', t_max)
+
 	tt.append(time.time())
 	nn = np.where((epoch_predef > t_min) & (epoch_predef < t_max))[0]
+	# print('nn: ', nn)
 	dist = list(map(dist_pre, nn))
+	# print('dist: ', dist)
 	number_list = range(len(nn) - 2)
 	a = list(filter(lambda x: dist[x+1] - dist[x] < 0 \
 		and dist[x+1] - dist[x+2] <0 , number_list))
+
 	tt.append(time.time())
 	#evaluate all minima
 	closest_time_vec = [999999.,999999.,999999.]
@@ -248,16 +255,28 @@ def estimate_Closest_parallax(row, gaia = True):
 		tt.append(time.time())
 		tt = np.array(tt)
 		cpt = tt[1:] - tt[:-1]
+
 		# print('cpt: ', cpt)
 		# print('tt55: ', tt55)
 		# print('a: ',a)
 		# print('a2: ', a2)
-		cpt = np.append(cpt, (tt55-tt44) / (len(a)+len(a2)))
+		try:
+			cpt = np.append(cpt, (tt55-tt44) / (len(a)+len(a2)))
+			return np.array([closest_date_vec, closest_dist_vec, closest_date_gaia_vec, closest_dist_gaia_vec]), cpt
+		except:
+			print('Problem occured.')
+			print('a:', a)
+			print('a2:', a2)
+			print('nn: ', nn)
+			print('dist: ', dist)
+			print('cpt:', cpt)
+			print('dist2:', dist2)
+			print('dist_pre', dist_pre)
+			return False, False
 		# print('closest_date_vec', closest_date_vec)
 		# print('closest_dist_vec', closest_dist_vec)
 		# print('closest_date_gaia_vec', closest_date_gaia_vec)
 		# print('closest_dist_gaia_vec', closest_dist_gaia_vec)
-		return np.array([closest_date_vec, closest_dist_vec, closest_date_gaia_vec, closest_dist_gaia_vec]), cpt
 
 
 def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
@@ -272,8 +291,8 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 
 
 
-	obj_pmra = tab['pmRA_x'].copy()
-	obj_pmdec = tab['pmDE_x'].copy()
+	obj_pmra = tab['pmRA_ob'].copy()
+	obj_pmdec = tab['pmDE'].copy()
 	obj_parallax = tab["Plx"].copy()
 	# set DR2 displacement as guess if ob_pm not known 
 	if 'ob_displacement_ra_doubled' in tab.colnames:
@@ -318,7 +337,7 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 	delta_pmtot = np.sqrt(np.square(delta_pmra) + np.square(delta_pmdec))
 	delta_ra_err = np.sqrt(np.square(lens_ra_err) + np.square(obj_ra_err))
 	delta_dec_err = np.sqrt(np.square(lens_dec_err) + np.square(obj_dec_err))
-	delta_pmRA_x_err = np.sqrt(np.square(lens_pmra_err) \
+	delta_pmRA_ob_err = np.sqrt(np.square(lens_pmra_err) \
 		+ np.square(obj_pmra_error))
 	delta_pmdec_err = np.sqrt(np.square(lens_pmdec_err) \
 		+ np.square(obj_pmdec_err)) 
@@ -329,7 +348,7 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 		pow(pow(delta_pmdec,2) * delta_ra \
 		- 2 * delta_pmra * delta_pmdec * delta_dec \
 		- pow(delta_pmra,2) * delta_ra,2) \
-		/ pow(delta_pmtot,8) * pow(delta_pmRA_x_err,2) \
+		/ pow(delta_pmtot,8) * pow(delta_pmRA_ob_err,2) \
 		+ pow(pow(delta_pmra,2) * delta_dec \
 		- 2 * delta_pmra * delta_pmdec * delta_ra \
 		- pow(delta_pmdec,2) * delta_dec,2) \
@@ -372,7 +391,7 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 		pow(pow(delta_pmdec, 2) * delta_ra \
 		- 2 * delta_pmra * delta_pmdec * delta_dec \
 		- pow(delta_pmra, 2) * delta_ra, 2) \
-		/ pow(delta_pmtot, 8) * pow(delta_pmRA_x_err, 2) \
+		/ pow(delta_pmtot, 8) * pow(delta_pmRA_ob_err, 2) \
 		+ pow(pow(delta_pmra, 2) * delta_dec \
 		- 2 * delta_pmra * delta_pmdec * delta_ra \
 		- pow(delta_pmdec, 2) * delta_dec, 2) \
@@ -382,7 +401,7 @@ def estimate_errors_parallax(tab, delta_t_approx = 1/26.,gaia = False):
 
 	minDist_err = np.sqrt(
 		pow((delta_dec * pow(delta_pmdec, 2) 
-		+ delta_ra * delta_pmdec * delta_pmra) * delta_pmRA_x_err, 2) 
+		+ delta_ra * delta_pmdec * delta_pmra) * delta_pmRA_ob_err, 2) 
 		/ pow(delta_pmtot, 6) 
 		+ pow((delta_ra * pow(delta_pmra, 2) 
 		+ delta_dec * delta_pmra * delta_pmdec) * delta_pmdec_err, 2) 

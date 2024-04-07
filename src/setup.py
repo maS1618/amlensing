@@ -11,12 +11,12 @@ warnings.simplefilter("ignore")
 
 #------------------------------------------------------------------------------
 #Default values and files 
-n_core = 4
+n_core = 5
 prefix = ''
 do_filter = 1
 # Files have to be located in Data or given as relative path from current working directory.
 # Raw Pairs File 
-raw_cands_table = 'rawcands_new.fits' 
+raw_cands_table = 'rawcands_happyy.fits' 
 
 # Method to determine good High Proper Motion Stars and BackGround Stars
 # If empty string: all source are belived to be good
@@ -29,7 +29,7 @@ hpms_file = 'good_HPMS.py'
 bgs_file = 'good_BGS.py'
 
 # Files to determine Good HPMS and BGS
-HPMS_DR3_file = 'gaia_dr3_hpms_new.fits' #all potential HPMS
+HPMS_DR3_file = 'gaia_dr3_hpms_happyy.fits' #all potential HPMS
 
 #GCNS_cat_file = 'GCNS_cat.fits' #Gaia catalogue of nearby stars
 #GCNS_reject_file= 'GCNS_reject.fits' #Gaia catalogue of nearby stars, 
@@ -37,7 +37,7 @@ HPMS_DR3_file = 'gaia_dr3_hpms_new.fits' #all potential HPMS
 #HPMS_spur_file = 'HPMS_spur.fits' #fidility values from J. Rybizki
 								  #et al. 2021 (optional)
 
-BGS_DR3_file = 'gaia_dr3_bgs_new.fits' #all potential BGS
+BGS_DR3_file = 'gaia_dr3_bgs_happyy.fits' #all potential BGS
 #gaiaedr3.dr2_neighbourhood for all BGS
 #DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits' 
 
@@ -45,7 +45,7 @@ BGS_DR3_file = 'gaia_dr3_bgs_new.fits' #all potential BGS
 random_sample_file = 'random_sample.fits'
 
 #dr2_random_file = 'dr2_random.fits'
-dr3_random_file = 'dr3_random.fits'
+# dr2_random_file = 'dr2_random.fits'
 
 #Blacklist
 Blacklist_file = 'Blacklist.csv'
@@ -71,8 +71,8 @@ zeropoint = 0	 # Used in Filters,
 # Default values for NONE in the raw pairs
 mask_values = {'phot_rp_mean_mag': 0,
 		'phot_bp_mean_mag': 0,
-		'pmRA_x': 0,
-		'pmDE_x': 0,
+		'pmRA_ob': 0,
+		'pmDE': 0,
 		'e_pmRA': 5,
 		'e_pmDE': 5,
 		'Plx': zeropoint,
@@ -81,7 +81,8 @@ mask_values = {'phot_rp_mean_mag': 0,
 		'BPmag': 0}
 
 # Gaia reference epoch
-Gaia_epoch = 2000.
+Gaia_epoch = 2016.
+mid_year = 2016.
 
 #------------------------------------------------------------------------------
 # limits for criteria on High Proper Motion Stars 

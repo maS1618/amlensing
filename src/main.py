@@ -52,8 +52,8 @@ def approx(cand):
 	print('approximated date of the closest appoach')
 	print('approximated separation at the closest appoach')
 
-	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmra']-cand['pmRA_x'])**2 \
-		+(cand['pmdec']-cand['pmDE_x'])**2)\
+	cand['t_aml'] = MaskedColumn(2/np.sqrt((cand['pmra']-cand['pmRA_ob'])**2 \
+		+(cand['pmdec']-cand['pmDE'])**2)\
 		*np.sqrt(cand['ThetaE'] ** 4 /0.1**2+cand['approx_dist']*2),\
 		dtype = 'float64',unit = 'years', \
 		description = 'Expected duration of the event (shift > ~0.1mas')
@@ -70,13 +70,13 @@ def approx(cand):
 	# filter n approximated effect
 	cand = cand[(approx_shift > 0.03) \
 		| (cand['approx_dist'] < 2 * cand['parallax'])]
-	cand = cand[(cand['approx_tca'] > 1995) \
-		& (cand['approx_tca'] < 2055)]
+	cand = cand[(cand['approx_tca'] > 2010) \
+		& (cand['approx_tca'] < 2070)]
 	print('-------------------------')
 	print('Good raw cands after approx_shift:', len(cand))
 	return cand
 
-def calc(cand, n_core = 4):
+def calc(cand, n_core = 5):
 	# split on multiple cores
 	if n_core > len(cand): n_core = len(cand)
 	if n_core > 1: 
@@ -95,12 +95,12 @@ def calc(cand, n_core = 4):
 					: round(cands_per_core * (core + 1))]
 			pickle.dump(raw_cands_parallel, f)
 			f.close()	
-
+			
 		#parallel computing 
 		#(see calculation.py, forward to microlensing.py and find_closest.py)
 		res_par = Parallel(n_jobs = n_core)(delayed(calculation.parallel)(i) \
 				for i in instring)
-
+	
 		# get results
 		table_out=[]
 		for string in instring:
@@ -158,9 +158,9 @@ def filter_events(table_out):
 					psi = 1
 			elif psi: BL2.append(int(line))
 			else: BL1.append(int(line))
-		BL1 = np.isin(table_out['Source'],BL1) \
+		BL1 = np.isin(table_out['SolID'],BL1) \
 			| np.isin(table_out['source_id'],BL1)
-		BL2 = np.isin(table_out['Source'],BL2) \
+		BL2 = np.isin(table_out['SolID'],BL2) \
 			| np.isin(table_out['source_id'],BL2)
 
 		aa = np.sum(FF)
@@ -171,7 +171,7 @@ def filter_events(table_out):
 
 		#does blacklist include Source?
 		BL = [int(i) for i in BL[BL.colnames[0]] if i[0] != '#']
-		blacklist = np.isin(table_out['Source'],BL) \
+		blacklist = np.isin(table_out['SolID'],BL) \
 			| np.isin(table_out['source_id'],BL)
 
 		if setup.save_table_process: # save step to file

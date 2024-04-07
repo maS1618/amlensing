@@ -24,17 +24,24 @@ def parallel(string):
 	tt=time.time()
 	# loop over row to find closest approach
 	for i, row in enumerate(raw_cands):
+		# print('i: ', i)
+		# print('row: ', row)
 		if (i+1)%100 == 0 : # print progress
 			print('Core %i: %i/%i | %im:%is '%(part+1, i+1,len(raw_cands),\
 				(time.time()-tt) // 60,(time.time()-tt) % 60))
 		data,cpt = estimate_Closest_parallax(row)
-		cc += cpt
-		result_closest.append(data)
+		if isinstance(cpt, bool): 
+			print(data, cpt)
+		else: 
+			cc += cpt
+			result_closest.append(data)
 	result_closest = np.array(result_closest)
-
+	# print('result_closest:',result_closest)
 	#print("parallel:", *cc)
+ 
 	data = Process_data(raw_cands,result_closest)
-	print('data',data)
+	# print('data',data)
+ 
 	# store output table temporary
 	f = open(string, 'wb')
 	pickle.dump(data, f)

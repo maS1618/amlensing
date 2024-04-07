@@ -121,8 +121,8 @@ def getGCDist_3Vec(pos1, pos2):
 def movePm_3Vec(raDeg, decDeg, pmra, pmdec, timeGaia, foreshort = 0):
 	"""
 	returns cartesian coordinates for an object with pos ra, dec 
-	and pm pmRA_x after Gaia epoch.
-	pmRA_x has to have cos(dec) applied, position in deg prop.motion in mas 
+	and pm pmRA_ob after Gaia epoch.
+	pmRA_ob has to have cos(dec) applied, position in deg prop.motion in mas 
 	the time unit is yours to choose.
 	"""
 	ra, dec = raDeg*DEG, decDeg*DEG
@@ -158,8 +158,8 @@ def movePm_parallax(raDeg, decDeg, pmra, pmdec, parallax, timeGaia, \
 		earthVec = None, foreshort = 0, gaia = False, ):
 	"""
 	returns cartesian coordinates for an object with pos ra, dec 
-	and pm pmRA_x after Gaia epoch.
-	pmRA_x has to have cos(dec) applied, position in deg, prop.motion and 
+	and pm pmRA_ob after Gaia epoch.
+	pmRA_ob has to have cos(dec) applied, position in deg, prop.motion and 
 	parallax in mas , the time in units of years after 2015.5
 	"""
 	baryVec = movePm_3Vec(raDeg, decDeg, pmra, pmdec, timeGaia, \

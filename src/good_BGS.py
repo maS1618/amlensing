@@ -11,16 +11,16 @@ import plot_functions as pf
 
 from setup import Folder, BGS_DR3_file, BGS_limit,\
 	  zeropoint,save_table_process,make_plots, form_out, prefix,\
-	random_sample_file, dr3_random_file
+	random_sample_file
 from utils import cosdeg
 
 def broadcast():
 	global Folder, BGS_DR3_file, BGS_limit,\
 		 zeropoint,save_table_process,make_plots, form_out, prefix,\
-		random_sample_file, dr3_random_file
+		random_sample_file
 	from setup import Folder, BGS_DR3_file, BGS_limit,\
 		 zeropoint,save_table_process,make_plots, form_out, prefix,\
-		random_sample_file, dr3_random_file
+		random_sample_file
 
 #for development
 
@@ -29,9 +29,9 @@ def BGS_load_Data(limit = BGS_limit['mag']):
 	print('BGS load Data')
 	global BGS
 	BGS = Table.read(Folder + 'Data/' + BGS_DR3_file)
-	BGS = BGS[BGS['phot_g_mean_mag'] < limit]
-	gamma = np.maximum(pow(10, 0.2 * (BGS['phot_g_mean_mag'] - 18)), 1)
-	BGS['psi'] = BGS['amax'] / (1.2 * gamma)
+	BGS = BGS[BGS['Gmag'] < limit]
+	gamma = np.maximum(pow(10, 0.2 * (BGS['Gmag'] - 18)), 1)
+	BGS['epsi'] = BGS['amax'] / (1.2 * gamma)
 	print('BGS:', len(BGS))
 
 def BGS_ruwe(limit = BGS_limit['ruwe']):
@@ -39,9 +39,9 @@ def BGS_ruwe(limit = BGS_limit['ruwe']):
 	#only for source with a five parameter solution
 
 	# only two parameter solution
-	two_parm = np.isnan(BGS['ruwe']) | (BGS['ruwe'] > 1e10)  
+	two_parm = np.isnan(BGS['RUWE_ob']) | (BGS['RUWE_ob'] > 1e10)  
 
-	good_ruwe = BGS['ruwe'] < limit
+	good_ruwe = BGS['RUWE_ob'] < limit
 	print('BGS Ruwe:', np.sum(good_ruwe), '/', len(BGS) - np.sum(two_parm))
 	out = two_parm | good_ruwe
 	return out
@@ -65,8 +65,8 @@ def BGS_gof(limit = BGS_limit['ruwe']):
 def BGS_px(limit = BGS_limit['px']):
 	# check if parallax is not signigicant negative
 	#only for source with a five parameter solution
-	two_parm = np.isnan(BGS['parallax']) | (BGS['parallax'] > 1e10)
-	good_px = (BGS['parallax'] > limit * BGS['parallax_error'] + zeropoint) 
+	two_parm = np.isnan(BGS['Plx']) | (BGS['Plx'] > 1e10)
+	good_px = (BGS['Plx'] > limit * BGS['Plx'] + zeropoint) 
 	print('BGS px:', np.sum(good_px& (two_parm==False)), '/', 
 		len(good_px)-np.sum(two_parm))
 	out = two_parm | good_px
@@ -79,8 +79,8 @@ def BGS_mc_Gill():
 	# only for sources with G < 18 
 	# see P. McGill et al. 2020
 	# not used to filter data, since most are true Gaia_eDR3 sources 
-	phot = BGS['phot_g_mean_mag'] > 18
-	psi = BGS['psi'] 
+	phot = BGS['Gmag'] > 18
+	psi = BGS['epsi'] 
 	good_psi = psi < 1
 	out = good_psi | phot
 	print('BGS PSI:', np.sum(out) - np.sum(phot), '/', len(out) - np.sum(phot))
@@ -177,8 +177,8 @@ def BGS_mc_Gill():
 
 def BGS_pos_error(limit = BGS_limit['pos_err']):
 	# Positional error better than 100
-	F_pos = BGS['ra_error'] * BGS['ra_error'] \
-		+ BGS['dec_error'] * BGS['dec_error'] < limit * limit
+	F_pos = BGS['e_RAdeg'] * BGS['e_RAdeg'] \
+		+ BGS['e_DEdeg'] * BGS['e_DEdeg'] < limit * limit
 
 	print('BGS pos:',np.sum(F_pos),'/', len(BGS))
 	
@@ -207,7 +207,7 @@ def main():
 	# tt.append(time.time())
 	good = good_ruwe & good_gof & good_px & good_pos 
 	#& (badDR2 == False)
-	good_source_ID = BGS['source_id'][good]
+	good_source_ID = BGS['SolID'][good]
 
 	tt.append(time.time())
 	print('BGS good:',np.sum(good),'/', len(BGS))

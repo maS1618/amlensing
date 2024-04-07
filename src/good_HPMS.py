@@ -63,9 +63,10 @@ def HPMS_n_obs_sig_g_flux(power = HPMS_limit['n_obs_sig_g_flux_power'],\
 	out =a*b> limit 
 	print('HPMS NvsF:', np.sum(out), '/', len(out))
 	if make_plots:
-		pf.plot_sig_flux(HPMS, out,power,limit)
+		pf.plot_sig_flux(HPMS, out, power, limit)
 	return out
 
+# plot_sig_flux (HPMS, HPMS_in_GCNS_reject_bad, out, power, limit)
 def HPMS_check_phot(cat = None,limit = HPMS_limit['mag']):
 	# check if phot_G < 21	
 	global HPMS

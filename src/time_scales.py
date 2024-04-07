@@ -8,6 +8,7 @@ from utils import DEG
 import plot_functions  as pf
 import random
 import os 
+import setup
 
 os.chdir(os.path.dirname(__file__))
 folder = '../Images/Timescale'
@@ -54,17 +55,17 @@ def timescales(tab):
         ThetaE = row['ThetaE']
         RAdeg = row['RAdeg']
         DEdeg = row['DEdeg']
-        pmRA_x = row['pmRA_x'] if not np.isnan(row['pmRA_x']) else (row['ob_displacement_ra_doubled'] if not np.isnan(row['ob_displacement_ra_doubled']) else 0)
-        pmDE_x = row['pmDE_x'] if not np.isnan(row['pmDE_x	']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
-        Plx = row['Plx'] if not np.isnan(row['Plx'])  else 4.740/75 *np.sqrt(pmRA_x*pmRA_x +pmDE_x	*pmDE_x	)
+        pmRA_ob = row['pmRA_ob'] if not np.isnan(row['pmRA_ob']) else (row['ob_displacement_ra_doubled'] if not np.isnan(row['ob_displacement_ra_doubled']) else 0)
+        pmDE = row['pmDE'] if not np.isnan(row['pmDE']) else (row['ob_displacement_dec_doubled'] if not np.isnan(row['ob_displacement_dec_doubled']) else 0)
+        Plx = row['Plx'] if not np.isnan(row['Plx'])  else 4.740/75 *np.sqrt(pmRA_ob*pmRA_ob +pmDE*pmDE)
         
         pos_lens = astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, epoch_predef, 
             earthVec = pos_sun_predef)
-        pos_source = astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x,pmDE_x, Plx,
+        pos_source = astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_ob,pmDE, Plx,
             epoch_predef, earthVec = pos_sun_predef)
-        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, row['TCA']-2016)
-        pos_source_max=astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_x ,pmDE_x , Plx,
-            row['TCA']-2016)
+        pos_lens_max=astrometry.movePm_parallax(ra, dec, pmra, pmdec, parallax, row['TCA']- setup.mid_year)
+        pos_source_max=astrometry.movePm_parallax(RAdeg, DEdeg, pmRA_ob ,pmDE, Plx,
+            row['TCA']- setup.mid_year)
         lens_ra, lens_dec = astrometry.dirVecToCelCoos(pos_lens)
         source_ra, source_dec = astrometry.dirVecToCelCoos(pos_source)
         lens_max_ra, lens_max_dec = astrometry.dirVecToCelCoos(pos_lens_max)
@@ -75,11 +76,10 @@ def timescales(tab):
         shift_plus = microlensing.calc_shift_plus(dist, ThetaE)
 
         shift_max = microlensing.calc_shift_plus(dist_max, ThetaE)
-        print(RAdeg,DEdeg,pmRA_x,pmDE_x	,Plx)
+        print('!!HERE!!')
+        print(RAdeg,DEdeg,pmRA_ob,pmDE,Plx)
         print(np.max(shift_plus), np.where(shift_plus == np.max(shift_plus)))
         index_max = np.where(shift_plus == np.max(shift_plus))[0][0]
-
-
 
         new_source_ra = shift_plus * (source_ra-lens_ra)*3.6e6/dist * np.cos(lens_dec*DEG)
         new_source_dec = shift_plus * (source_dec-lens_dec)*3.6e6/dist
@@ -93,7 +93,7 @@ def timescales(tab):
         if np.min(dist2)< 0.1:
             enter_01 = np.where(dist2 < 0.1)[0][0]
             t_enter_01 = epoch_predef[enter_01]
-            ts_01.append(row['TCA'] - t_enter_01-2016)
+            ts_01.append(row['TCA'] - t_enter_01- setup.mid_year)
         else: 
             ts_01.append(1/365)
         # plt.plot(epoch_predef,dist2)
@@ -101,7 +101,7 @@ def timescales(tab):
         # plt.legend
         if ts_01[-1]>100: 
             fig = plot_timescales(new_source_ra, new_source_dec, max_source_ra, max_source_dec,shift_plus, dist2)
-            fig.savefig(f'{folder}/{row["Source"]}.png')
+            fig.savefig(f'{folder}/{row["SolID"]}.png')
             print(row["shift_plus"], max(shift_plus))
             plt.show()
 
@@ -112,13 +112,13 @@ def timescales(tab):
         elif np.min(dist2)< 0.5:
             enter_05 = np.where(dist2 < 0.5)[0][0]
             t_enter_05 = epoch_predef[enter_05]
-            ts_05.append(row['TCA'] - t_enter_05-2016)
+            ts_05.append(row['TCA'] - t_enter_05- setup.mid_year)
         else:
             ts_05.append(1/365)
         if min(dist2) < 0.5*max(shift_max):
             enter_50pc = np.where(dist2 < 0.5*shift_max)[0][0]
             t_enter_50pc = epoch_predef[enter_50pc]
-            ts_50pc.append(row['TCA'] - t_enter_50pc-2016)
+            ts_50pc.append(row['TCA'] - t_enter_50pc- setup.mid_year)
         else:
             ts_50pc.append(1/365)
     print(len(tab.colnames))
