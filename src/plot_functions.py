@@ -581,7 +581,7 @@ def plot_results(result):
 						plt.subplots_adjust(\
 							left = plt.rcParams['figure.subplot.left']/2,
 							right= plt.rcParams['figure.subplot.right']/2+0.5)
-					else: fig = plt.figure('Results_2030_'+typ+add)
+					else: fig = plt.figure('Results_2015_'+typ+add)
 					which = np.ones(len(result),bool)
 				elif typ == 'MS':
 					if timerange[1] == setup.year_final:
@@ -589,12 +589,12 @@ def plot_results(result):
 						plt.subplots_adjust(\
 						left = plt.rcParams['figure.subplot.left']/2,
 						right= plt.rcParams['figure.subplot.right']/2+0.5)
-					else:fig = plt.figure('Results_2030_'+typ+add)
+					else:fig = plt.figure('Results_2015_'+typ+add)
 					which = result['star_type']==typ
 				else:
 					if timerange[1] == setup.year_final: 
 						fig = plt.figure('Results_'+typ+add)
-					else: fig = plt.figure('Results_2030_'+typ+add)
+					else: fig = plt.figure('Results_2015_'+typ+add)
 					which = result['star_type']==typ
 				which = which & ((result['Gmag']
 					-result['phot_g_mean_mag']) < mag_dif)
@@ -654,7 +654,7 @@ def plot_results(result):
 						range= timerange, rwidth = 0.9, zorder = z, 
 						label = label)
 				else:
-					fig = plt.figure('Results_Hist_2030_' + typ, 
+					fig = plt.figure('Results_Hist_2015_' + typ, 
 						figsize = [6.4,2.4])
 					plt.subplots_adjust(\
 							bottom = plt.rcParams['figure.subplot.bottom']*2)
