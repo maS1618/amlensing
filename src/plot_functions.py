@@ -160,7 +160,6 @@ def plot_psi_result_part_1(random_sample):
 	rgamma = np.maximum(
 		pow(10, 0.2 * (random_sample['phot_g_mean_mag'] - 18)), 1)
 	rpsi = random_sample['astrometric_sigma5d_max'] / (1.2 * rgamma)
-	print('rpsi: ' ,rpsi)
 	semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 		color = grey, ms = 0.05,  zorder = 0, label = "random sample")
 	c = np.arange(9.5,21,0.1)
@@ -572,12 +571,12 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 
 def plot_results(result):
 	for typ in ['All','WD','RG','MS','BD']:
-		for timerange in [[setup.year_initial,setup.year_final],[2014,2032]]:
+		for timerange in [[setup.year_initial,setup.year_final],[setup.year_initial+4,setup.year_initial+22]]:
 			for mag_dif in [20,6,3]:
 				if mag_dif == 20 : add =''
 				else: add = '_DG_'+str(mag_dif)
 				if typ == 'All':
-					if timerange[1] == 2070:
+					if timerange[1] == setup.year_final:
 						fig = plt.figure('Results_'+typ+add,figsize= [12.8,4.8])
 						plt.subplots_adjust(\
 							left = plt.rcParams['figure.subplot.left']/2,
@@ -585,7 +584,7 @@ def plot_results(result):
 					else: fig = plt.figure('Results_2030_'+typ+add)
 					which = np.ones(len(result),bool)
 				elif typ == 'MS':
-					if timerange[1] == 2070:
+					if timerange[1] == setup.year_final:
 						fig = plt.figure('Results_'+typ+add, figsize=[12.8,4.8])
 						plt.subplots_adjust(\
 						left = plt.rcParams['figure.subplot.left']/2,
@@ -593,7 +592,7 @@ def plot_results(result):
 					else:fig = plt.figure('Results_2030_'+typ+add)
 					which = result['star_type']==typ
 				else:
-					if timerange[1] == 2070: 
+					if timerange[1] == setup.year_final: 
 						fig = plt.figure('Results_'+typ+add)
 					else: fig = plt.figure('Results_2030_'+typ+add)
 					which = result['star_type']==typ
@@ -615,7 +614,7 @@ def plot_results(result):
 				plt.ylim([0.05,50])
 				plt.yticks([0.1,0.2,0.5,1,2,5,10,20,50],\
 					['0.10','0.20','0.50','1.0','2.0','5.0','10','20','50'])
-				plt.xlim(timerange)
+				# plt.xlim(timerange)
 
 				leg = plt.legend()
 				for lh in leg.legendHandles: 
@@ -638,7 +637,7 @@ def plot_results(result):
 					z = 0
 					c = grey 
 					label = 'All events'
-				if timerange[1] == 2070:
+				if timerange[1] == setup.year_final:
 					if typ == 'All' or typ == 'MS':
 						fig = plt.figure('Results_Hist_'+ typ, \
 							figsize = [12.8,2.4])
@@ -660,12 +659,12 @@ def plot_results(result):
 					plt.subplots_adjust(\
 							bottom = plt.rcParams['figure.subplot.bottom']*2)
 					plt.hist(result['TCA'][which], color = c, range= timerange,
-						bins = (timerange[1]-timerange[0])*2,rwidth = 0.9,
+						bins = (2055-1995)*2,rwidth = 0.9,
 						zorder = z, weights = np.ones(len(result[which]))*2,
 						label = label)
 				leg = plt.legend()
 
-				plt.xlim(timerange)
+				# plt.xlim(timerange)
 				plt.ylabel(r'Events per year')
 				plt.xlabel(r'$T_{CA}$ [yr]')
 

@@ -186,6 +186,6 @@ def pos_sun(timeGaia):
 	return Vector3(spherToCart(earthcoord.ra.rad, earthcoord.dec.rad)) \
 			* earthcoord.distance.pc
 
-epoch_predef = np.arange(-15, 70, 1/52)
+epoch_predef = np.arange(-40, 70, 1/52)
+# epoch_predef = np.arange(-15, 70, 1/52)
 pos_sun_predef = pos_sun(epoch_predef)
-

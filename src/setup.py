@@ -87,8 +87,8 @@ Gaia_epoch = 2016.
 # year_final = 2070
 
 mid_year = 2016.
-year_initial = 2010.
-year_final = 2070.
+year_initial = 1995.
+year_final = 2055.
 
 #------------------------------------------------------------------------------
 # limits for criteria on High Proper Motion Stars 
