@@ -571,7 +571,7 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 
 def plot_results(result):
 	for typ in ['All','WD','RG','MS','BD']:
-		for timerange in [[setup.year_initial,setup.year_final],[setup.year_initial+4,setup.year_initial+22]]:
+		for timerange in [[setup.year_initial,setup.year_final],[1999, 2017]]:
 			for mag_dif in [20,6,3]:
 				if mag_dif == 20 : add =''
 				else: add = '_DG_'+str(mag_dif)
@@ -659,7 +659,7 @@ def plot_results(result):
 					plt.subplots_adjust(\
 							bottom = plt.rcParams['figure.subplot.bottom']*2)
 					plt.hist(result['TCA'][which], color = c, range= timerange,
-						bins = (2055-1995)*2,rwidth = 0.9,
+						bins = (timerange[1]-timerange[0])*2,rwidth = 0.9,
 						zorder = z, weights = np.ones(len(result[which]))*2,
 						label = label)
 				leg = plt.legend()
