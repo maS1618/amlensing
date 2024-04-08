@@ -16,14 +16,15 @@ def broadcast():
 	global make_plots, Pair_limit
 	from setup import make_plots, Pair_limit
 
-def Filter_sim_pm(rp, limit = Pair_limit['pm_sim_1'],\
-	limit_sim = Pair_limit['pm_sim_2']):
+def Filter_sim_pm(rp, limit_sim_1 = Pair_limit['pm_sim_1'],\
+	limit_sim_2 = Pair_limit['pm_sim_2']):
 	# non similar proper motion
 
-	F_pm_1= (rp['pmra']-rp['pmRA_ob'])**2 + (rp['pmdec']- rp['pmDE'])**2 \
-			> limit_sim**2 * (rp['pmdec']**2 + rp['pmra']**2)
-	F_pm_2 = rp['pmRA_ob']**2 + rp['pmDE']**2 \
-		< limit**2 * (rp['pmdec']**2 + rp['pmra']**2)
+	#Filters to make sure the lens has higher proper motion than its source
+	F_pm_1 = rp['pmRA_ob']**2 + rp['pmDE']**2 \
+		< limit_sim_1**2 * (rp['pmdec']**2 + rp['pmra']**2)
+	F_pm_2 = (rp['pmRA_ob'] - rp['pmra'])**2 + (rp['pmDE'] - rp['pmdec'])**2 \
+			> limit_sim_2**2 * (rp['pmdec']**2 + rp['pmra']**2)
 
 	# Filter is not used for bgs without 5-parameter solution
 	F_pm_3 = rp['pmRA_ob'].mask 
@@ -35,16 +36,29 @@ def Filter_sim_pm(rp, limit = Pair_limit['pm_sim_1'],\
 	# print(np.sum(rp['pmdec'].mask ))
 	# print(limit_sim)
 
-	print('F_pm_1 : ',np.sum(F_pm_1))
-	print('F_pm_2 : ',np.sum(F_pm_2))
-	print('F_pm_3 : ',np.sum(F_pm_3))
+	print('Objects left after Filter 1 : ',np.sum(F_pm_1))
+	print('Objects left after Filter 2 : ',np.sum(F_pm_2))
+	print('Objects left after Filter 3 : ',np.sum(F_pm_3))
 	
+	from functools import reduce
+
 	if any(F_pm_3) == False:
 		F_pm_3 = (rp['pmra'] == 1e20)
 	if make_plots:
-		FF_GP = [F_pm_1 & F_pm_2]
-		print('FF: ', FF_GP)
-		pf.plot_delta_pm_ax1(rp, FF_GP)
+		# masks = []
+		# masks.append(F_pm_1)
+		# masks.append(F_pm_2)
+		# total_mask = (np.logical_and , masks)
+		F_pm_1_filled = F_pm_1.filled(False)  # Replace masked values with False
+		F_pm_2_filled = F_pm_2.filled(False)  # Replace masked values with False
+
+		# Step 3: Combine masks with logical AND
+		combined_mask = F_pm_1_filled & F_pm_2_filled
+		print('F_pm_1 mask: ', F_pm_1)
+		print('F_pm_2 mask: ', F_pm_2)
+		print('total_mask: ', combined_mask)
+		pf.plot_delta_pm_ax1(rp, combined_mask)
+
 	F_pm_1.fill_value = False
 	F_pm_1 = F_pm_1.filled()	
 

@@ -82,7 +82,13 @@ mask_values = {'phot_rp_mean_mag': 0,
 
 # Gaia reference epoch
 Gaia_epoch = 2016.
+# mid_year = 2016.
+# year_initial = 2010
+# year_final = 2070
+
 mid_year = 2016.
+year_initial = 2010.
+year_final = 2070.
 
 #------------------------------------------------------------------------------
 # limits for criteria on High Proper Motion Stars 

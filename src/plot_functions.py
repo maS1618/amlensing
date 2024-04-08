@@ -164,7 +164,6 @@ def plot_psi_result_part_1(random_sample):
 	semilogy(random_sample['phot_g_mean_mag'], rpsi,\
 		color = grey, ms = 0.05,  zorder = 0, label = "random sample")
 	c = np.arange(9.5,21,0.1)
-	# print('rand_sample <1: ', random_sample['phot_g_mean_mag'] < 1)
 	d = np.array([np.percentile(rpsi[np.abs(random_sample['phot_g_mean_mag']-i) < 1],90) 
 		for i in c])
 	plt.plot(c,d, color = limitcolor, label = "90th percentile", zorder = 100)
@@ -172,7 +171,7 @@ def plot_psi_result_part_1(random_sample):
 	plt.ylabel(r"$\Psi$")
 	plt.xlabel(r"G [mag]")
 
-'''def plot_DR2_match(DR2_BGS,good,excluded,dist_limit,dr2_random = None):
+def plot_DR2_match(DR2_BGS,good,excluded,dist_limit,dr2_random = None):
 	fig = plt.figure("DR2")
 	fig.clf()
 	if dr2_random is not None:
@@ -197,7 +196,7 @@ def plot_psi_result_part_1(random_sample):
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
 		lh.set_alpha(1)
-		lh.set_markersize(5)
+		# lh.set_markersize(5)
 	plt.xlabel("$\Delta\phi$ [mas]")
 	plt.ylabel("$\Delta G$ [mag]")
 	if ion: plt.pause(0.1)
@@ -243,8 +242,8 @@ def plot_DR2_pm(d3,dr2,pp):
 	leg = ax1.legend()
 	for lh in leg.legendHandles: 
 		lh.set_alpha(1)
-		lh.set_markersize(5)
-	if ion: plt.pause(0.1)'''
+		# lh.set_markersize(5)
+	if ion: plt.pause(0.1)
 
 def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None): 
 	fig = plt.figure("pos_err")
@@ -276,9 +275,9 @@ def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None):
 		ax.yaxis.set_major_formatter(formatter)
 
 	if data is not None:
-		semilogy(data['phot_g_mean_mag'], \
-			np.sqrt(data['ra_error'] * data['ra_error'] + \
-			data['dec_error'] * data['dec_error']),  \
+		semilogy(data['Gmag'], \
+			np.sqrt(data['e_RAdeg'] * data['e_DEdeg'] + \
+			data['e_DEdeg'] * data['e_DEdeg']),  \
 			color = green, ms = 0.5, zorder = 2, \
 			label = 'good BGS')
 		ax = plt.gca()
@@ -399,25 +398,25 @@ def plot_delta_pm_ax1(rp,FF):
 		# lh.set_markersize(5)	
 	if ion: plt.pause(0.1)
 
-def  plot_delta_pm_ax2(rp,F_pm_3,FF):
-	fig = plt.figure("delta_pm", figsize = [6.4,3])
-	fig.subplots_adjust(right = 0.87, bottom = 0.17)
-	ax2 = plt.subplot(122)
-	plot(rp[F_pm_3]['pmra'] \
-		- rp[F_pm_3]['ob_displacement_ra_doubled'],\
-		rp[F_pm_3]['pmdec'] \
-		- rp[F_pm_3]['ob_displacement_dec_doubled'],\
-		color = red,  ms = 0.5)
-	plot(rp['pmra'][FF] - rp['ob_displacement_ra_doubled'][FF], \
-		rp['pmdec'][FF] - rp['ob_displacement_dec_doubled'][FF], \
-		color = blue, ms = 0.5)
-	plt.xlabel(r'$\mu_{\alpha^{\star}} - \Delta \phi_{\rm \times2,\,\alpha^{\star}}/1{\rm yr}$ [mas/yr]')
-	plt.ylabel(r'$\mu_{\delta} - \Delta \phi_{\rm \times2,\,\delta}/1{\rm yr}$ [mas/yr]')
-	plt.xlim([-500,500])
-	plt.ylim([-500,500])
-	ax2.yaxis.tick_right()
-	ax2.yaxis.set_label_position("right")
-	if ion: plt.pause(0.01)
+# def  plot_delta_pm_ax2(rp,F_pm_3,FF):
+# 	fig = plt.figure("delta_pm", figsize = [6.4,3])
+# 	fig.subplots_adjust(right = 0.87, bottom = 0.17)
+# 	ax2 = plt.subplot(122)
+# 	plot(rp[F_pm_3]['pmra'] \
+# 		- rp[F_pm_3]['ob_displacement_ra_doubled'],\
+# 		rp[F_pm_3]['pmdec'] \
+# 		- rp[F_pm_3]['ob_displacement_dec_doubled'],\
+# 		color = red,  ms = 0.5)
+# 	plot(rp['pmra'][FF] - rp['ob_displacement_ra_doubled'][FF], \
+# 		rp['pmdec'][FF] - rp['ob_displacement_dec_doubled'][FF], \
+# 		color = blue, ms = 0.5)
+# 	plt.xlabel(r'$\mu_{\alpha^{\star}} - \Delta \phi_{\rm \times2,\,\alpha^{\star}}/1{\rm yr}$ [mas/yr]')
+# 	plt.ylabel(r'$\mu_{\delta} - \Delta \phi_{\rm \times2,\,\delta}/1{\rm yr}$ [mas/yr]')
+# 	plt.xlim([-500,500])
+# 	plt.ylim([-500,500])
+# 	ax2.yaxis.tick_right()
+# 	ax2.yaxis.set_label_position("right")
+# 	if ion: plt.pause(0.01)
 
 def plot_sim_px(rp= None,F_px_1=None, data = None):
 	fig = plt.figure("sim_px")
@@ -444,7 +443,7 @@ def plot_sim_px(rp= None,F_px_1=None, data = None):
 # Plot functions used in raw_data
 def plot_psi_part2(data):
 	plt.figure("psi")
-	semilogy(data['phot_g_mean_mag'], data["psi"], \
+	semilogy(data['Gmag'], data["epsi"], \
 		color = yellow, ms = 1,  zorder = 2, \
 		label = 'good BGS')
 		#color = green, ms = 0.5,  zorder = 2
@@ -573,7 +572,7 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 
 def plot_results(result):
 	for typ in ['All','WD','RG','MS','BD']:
-		for timerange in [[2010,2070],[2014,2032]]:
+		for timerange in [[setup.year_initial,setup.year_final],[2014,2032]]:
 			for mag_dif in [20,6,3]:
 				if mag_dif == 20 : add =''
 				else: add = '_DG_'+str(mag_dif)
@@ -694,7 +693,7 @@ def plot_results(result):
 		plt.ylim([0.001,5])
 		plt.yticks([0.001,0.005,0.01,0.05,0.1,0.5,1,5],\
 			['0.001', '0.005','0.01','0.05','0.1','0.5','1','5'])
-		plt.xlim(2010,2070)
+		plt.xlim(setup.year_initial,setup.year_final)
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
 			try: 
