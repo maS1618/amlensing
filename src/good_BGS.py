@@ -31,7 +31,7 @@ def BGS_load_Data(limit = BGS_limit['mag']):
 	BGS = Table.read(Folder + 'Data/' + BGS_DR3_file)
 	BGS = BGS[BGS['Gmag'] < limit]
 	gamma = np.maximum(pow(10, 0.2 * (BGS['Gmag'] - 18)), 1)
-	BGS['epsi'] = BGS['amax'] / (1.2 * gamma)
+	BGS['psi'] = BGS['amax'] / (1.2 * gamma)
 	print('BGS:', len(BGS))
 
 def BGS_ruwe(limit = BGS_limit['ruwe']):
@@ -80,7 +80,7 @@ def BGS_mc_Gill():
 	# see P. McGill et al. 2020
 	# not used to filter data, since most are true Gaia_eDR3 sources 
 	phot = BGS['Gmag'] > 18
-	psi = BGS['epsi'] 
+	psi = BGS['psi'] 
 	good_psi = psi < 1
 	out = good_psi | phot
 	print('BGS PSI:', np.sum(out) - np.sum(phot), '/', len(out) - np.sum(phot))
@@ -207,7 +207,7 @@ def main():
 	# tt.append(time.time())
 	good = good_ruwe & good_gof & good_px & good_pos 
 	#& (badDR2 == False)
-	good_source_ID = BGS['SolID'][good]
+	good_source_ID = BGS['Source'][good]
 
 	tt.append(time.time())
 	print('BGS good:',np.sum(good),'/', len(BGS))

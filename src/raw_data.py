@@ -143,7 +143,7 @@ def check_bgs():
 		good_BGS_source_ID = GB.main()
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
-			good_raw_cands_HPMS['SolID'], good_BGS_source_ID)]
+			good_raw_cands_HPMS['Source'], good_BGS_source_ID)]
 
 		# include DR2- DR3 propermotion
 		# DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
@@ -166,13 +166,13 @@ def check_bgs():
 			good_bgs = bgs
 		#check if source id in whitlist
 		good_raw_cands_BGS = good_raw_cands_HPMS[np.isin(
-			good_raw_cands_HPMS['SolID'], good_bgs['SolID'])]
+			good_raw_cands_HPMS['Source'], good_bgs['Source'])]
 	else: 
 		#do not performe BGS filtering 
 		good_raw_cands_BGS = good_raw_cands_HPMS
 		good_BGS_source_ID, _ , pmDR2 = GB.main()
 		DR2_pm = np.array([pmDR2[i] if i in pmDR2.keys() else [0,0] \
-			for i in good_raw_cands_BGS['SolID']])
+			for i in good_raw_cands_BGS['Source']])
 
 		# good_raw_cands_BGS['ob_displacement_ra_doubled'] = \
 		# 	MaskedColumn(DR2_pm[:,0],unit = 'mas', description = 'Doubled ' \
@@ -254,7 +254,7 @@ def main(redo = 0):
 
 	if make_plots:
 		bgs_good = GB.BGS[np.isin(
-			GB.BGS['SolID'], good_raw_cands["SolID"])]
+			GB.BGS['Source'], good_raw_cands["Source"])]
 		pf.plot_psi_part2(bgs_good)
 
 		pf.plot_pos_err(data=bgs_good)

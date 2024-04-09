@@ -158,9 +158,9 @@ def filter_events(table_out):
 					psi = 1
 			elif psi: BL2.append(int(line))
 			else: BL1.append(int(line))
-		BL1 = np.isin(table_out['SolID'],BL1) \
+		BL1 = np.isin(table_out['Source'],BL1) \
 			| np.isin(table_out['source_id'],BL1)
-		BL2 = np.isin(table_out['SolID'],BL2) \
+		BL2 = np.isin(table_out['Source'],BL2) \
 			| np.isin(table_out['source_id'],BL2)
 
 		aa = np.sum(FF)
@@ -171,7 +171,7 @@ def filter_events(table_out):
 
 		#does blacklist include Source?
 		BL = [int(i) for i in BL[BL.colnames[0]] if i[0] != '#']
-		blacklist = np.isin(table_out['SolID'],BL) \
+		blacklist = np.isin(table_out['Source'],BL) \
 			| np.isin(table_out['source_id'],BL)
 
 		if setup.save_table_process: # save step to file

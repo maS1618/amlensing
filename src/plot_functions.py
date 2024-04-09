@@ -442,7 +442,7 @@ def plot_sim_px(rp= None,F_px_1=None, data = None):
 # Plot functions used in raw_data
 def plot_psi_part2(data):
 	plt.figure("psi")
-	semilogy(data['Gmag'], data["epsi"], \
+	semilogy(data['Gmag'], data["psi"], \
 		color = yellow, ms = 1,  zorder = 2, \
 		label = 'good BGS')
 		#color = green, ms = 0.5,  zorder = 2
@@ -528,19 +528,19 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 	if 'psi_result' in plt.get_figlabels():
 		plt.figure('psi_result')
 
-		bl = np.isin(BGS['SolID'],\
+		bl = np.isin(BGS['Source'],\
 			result[blacklist]['source_id'])
 		bl2= bl & (BGS['DEdeg'] < -30)
 
-		res = np.isin(BGS['SolID'],result[filtered]['SolID'])
+		res = np.isin(BGS['Source'],result[filtered]['Source'])
 		g = BGS['Gmag'][res]
 		g_BL = BGS['Gmag'][bl]
 		g_BL2 = BGS['Gmag'][bl2]
 
 		if 'psi' in BGS.colnames:				
-			psi = BGS['epsi'][res]
-			psi_BL = BGS['epsi'][bl]
-			psi_BL2 = BGS['epsi'][bl2]
+			psi = BGS['psi'][res]
+			psi_BL = BGS['psi'][bl]
+			psi_BL2 = BGS['psi'][bl2]
 		else:
 			gamma = np.maximum(pow(10, 0.2 * (BGS['Gmag'] - 18)), 1)
 			psi_bgs = BGS['amax'] / (1.2 * gamma)

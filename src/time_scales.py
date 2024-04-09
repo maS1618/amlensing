@@ -101,7 +101,7 @@ def timescales(tab):
         # plt.legend
         if ts_01[-1]>100: 
             fig = plot_timescales(new_source_ra, new_source_dec, max_source_ra, max_source_dec,shift_plus, dist2)
-            fig.savefig(f'{folder}/{row["SolID"]}.png')
+            fig.savefig(f'{folder}/{row["Source"]}.png')
             print(row["shift_plus"], max(shift_plus))
             plt.show()
 

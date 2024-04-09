@@ -162,7 +162,3 @@ def Process_data(raw_cands, result_closest):
 		raw_cands['L2_magnification'] = c_effect[8]
 		raw_cands['L2_magnification_error'] = c_effect[9]
 	return(raw_cands)
-
-
-
-
