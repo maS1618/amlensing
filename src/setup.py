@@ -38,6 +38,7 @@ HPMS_DR3_file = 'gaia_dr3_hpms_happyy.fits' #all potential HPMS
 								  #et al. 2021 (optional)
 
 BGS_DR3_file = 'gaia_dr3_bgs_happyy.fits' #all potential BGS
+# BGS_DR3_file = 'BGS_field_10arcs.fits'
 #gaiaedr3.dr2_neighbourhood for all BGS
 #DR2_BGS_file = 'gaia_bgs_dr2_neighbours.fits' 
 
