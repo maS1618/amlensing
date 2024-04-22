@@ -33,13 +33,13 @@ results = Table.read(dr3_file, format = "fits")
 
 # category 
 all_results = np.ones(len(results), dtype = bool)
-hpms = results['pmra']**2+results['pmdec']**2>150**2
+hpms = results['pmra']**2+results['pmdec']**2>100**2
 g18 = results["Gmag"]<18
 WD = abs(results["mass"]- 0.65)< 1e-6
 lowmass = results["mass"] < 0.65 - 1e-6
 solarMass = results["mass"] > 0.65 + 1e-6
 cathegories = {'all':all_results,
-	'pm > 150 mas/yr':hpms,
+	'pm > 100 mas/yr':hpms,
 	'G_source < 18 mag':g18,
 	'White Dwarfs':WD,
 	'Mass < 0.65Msun':lowmass,
@@ -51,8 +51,8 @@ shift1 = results['shift_plus']>1
 shift1lum = results['shift_lum']>1
 shift05 = results['shift_plus']>0.5
 shift05lum = results['shift_lum']>0.5
-shift01lum = results['shift_lum']>0.1
-nextdecade = (results['TCA']<2017) & (results['TCA']>2006)
+shift01lum = results['shift_lum']>0
+nextdecade = (results['TCA']<2011) & (results['TCA']>2001)
 mag01 = results['magnification']>0.001
 mag10 = results['magnification']>0.01
 mag100 = results['magnification']>0.1
@@ -73,9 +73,9 @@ for cat in cathegories.keys():
 	evp = []
 	evp1m = []
 	for dg in [all_results,deltaG3,deltaG6]:
-		evp_list = [np.sum(abs(results['TCA'][current&dg]-y)<0.25)*2 for y in np.arange(2011,2065.,.25)]
+		evp_list = [np.sum(abs(results['TCA'][current&dg]-y)<0.25)*2 for y in np.arange(1991,2005.,.25)]
 		evp.append(np.median(evp_list))
-		evp1m_list = [np.sum(abs(results['TCA'][current&shift1&dg]-y)<0.5) for y in np.arange(2025,2065.,.5)]
+		evp1m_list = [np.sum(abs(results['TCA'][current&shift1&dg]-y)<0.5) for y in np.arange(2000,2005.,.5)]
 		evp1m.append(np.median(evp1m_list))
 
 	n_s1 = [np.sum(shift1&current&dg) for dg in [all_results,deltaG3,deltaG6]]

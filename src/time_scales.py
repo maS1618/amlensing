@@ -76,9 +76,11 @@ def timescales(tab):
         shift_plus = microlensing.calc_shift_plus(dist, ThetaE)
 
         shift_max = microlensing.calc_shift_plus(dist_max, ThetaE)
+        
         print('!!HERE!!')
         print(RAdeg,DEdeg,pmRA_ob,pmDE,Plx)
         print(np.max(shift_plus), np.where(shift_plus == np.max(shift_plus)))
+
         index_max = np.where(shift_plus == np.max(shift_plus))[0][0]
 
         new_source_ra = shift_plus * (source_ra-lens_ra)*3.6e6/dist * np.cos(lens_dec*DEG)

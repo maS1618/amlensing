@@ -102,7 +102,7 @@ def plot_gof(BGS,out, limit):
 	xlim = np.array(plt.xlim())
 	plt.loglog(xlim, np.sqrt(xlim) * f(limit),color = limitcolor,\
 		linewidth = 1)
-	# plt.xlim(xlim)
+	plt.xlim(xlim)
 	leg = plt.legend()
 	for lh in leg.legendHandles: 
 		lh.set_alpha(1)
@@ -264,7 +264,7 @@ def plot_pos_err(BGS=None,F_pos=None,limit=None,data=None):
 		xlim=plt.xlim()
 		plt.plot(xlim,[10,10], color = limitcolor, 
 			label = r'$\sigma_{\rm pos} = 10$',zorder = 5)
-		# plt.xlim(xlim)
+		plt.xlim(xlim)
 		leg = plt.legend()
 		for lh in leg.legendHandles: 
 			lh.set_alpha(1)
@@ -322,7 +322,7 @@ def plot_ruwe(HPMS,out):
 		ms = 0.5, label = "HPMS")
 	xlim=plt.xlim()
 	plt.plot(xlim,[2,2], color = 'orange', label = 'ruwe = 2')
-	# plt.xlim(xlim)
+	plt.xlim(xlim)
 	plt.ylabel("Ruwe")
 	plt.xlabel("G [mag]")
 	leg = plt.legend()
@@ -571,7 +571,7 @@ def plot_psi_result_part_2(BGS,result,blacklist, filtered):
 
 def plot_results(result):
 	for typ in ['All','WD','RG','MS','BD']:
-		for timerange in [[setup.year_initial,setup.year_final],[1999, 2017]]:
+		for timerange in [[setup.year_initial,setup.year_final],[setup.year_initial+4,setup.year_final]]:
 			for mag_dif in [20,6,3]:
 				if mag_dif == 20 : add =''
 				else: add = '_DG_'+str(mag_dif)
@@ -581,7 +581,8 @@ def plot_results(result):
 						plt.subplots_adjust(\
 							left = plt.rcParams['figure.subplot.left']/2,
 							right= plt.rcParams['figure.subplot.right']/2+0.5)
-					else: fig = plt.figure('Results_2015_'+typ+add)
+					else: 
+						fig = plt.figure('Results_2015_'+typ+add)
 					which = np.ones(len(result),bool)
 				elif typ == 'MS':
 					if timerange[1] == setup.year_final:
@@ -589,15 +590,15 @@ def plot_results(result):
 						plt.subplots_adjust(\
 						left = plt.rcParams['figure.subplot.left']/2,
 						right= plt.rcParams['figure.subplot.right']/2+0.5)
-					else:fig = plt.figure('Results_2015_'+typ+add)
+					else:
+						fig = plt.figure('Results_2015_'+typ+add)
 					which = result['star_type']==typ
 				else:
 					if timerange[1] == setup.year_final: 
 						fig = plt.figure('Results_'+typ+add)
 					else: fig = plt.figure('Results_2015_'+typ+add)
 					which = result['star_type']==typ
-				which = which & ((result['Gmag']
-					-result['phot_g_mean_mag']) < mag_dif)
+				which = which & ((result['Gmag'] -result['phot_g_mean_mag']) < mag_dif)
 				ax = plt.gca()
 				twopar = which & (result['Plx'] == 0)
 				fivepar = which & (result['Plx'] != 0)
@@ -614,7 +615,7 @@ def plot_results(result):
 				plt.ylim([0.05,50])
 				plt.yticks([0.1,0.2,0.5,1,2,5,10,20,50],\
 					['0.10','0.20','0.50','1.0','2.0','5.0','10','20','50'])
-				# plt.xlim(timerange)
+				plt.xlim(timerange)
 
 				leg = plt.legend()
 				for lh in leg.legendHandles: 
